@@ -65,7 +65,7 @@ const Login = () => {
       </AppBar>
 
       {/* Login Form with Image */}
-      <Container sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "70px" }}>
+      <Container sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "103px" }}>
         <Box
           sx={{
             maxWidth: 500,
@@ -93,7 +93,7 @@ const Login = () => {
               "Empowering health, connecting lives. Your well-being starts here."
             </Typography>
           </Box>
-
+<br></br>
           {error && (
             <Typography color="error" variant="body2" textAlign="center" marginBottom={2}>
               {error}
@@ -146,12 +146,13 @@ const Login = () => {
             <Link to="/register" style={{ color: "#16a34a", textDecoration: "none" }}>
               Register here
             </Link>
+            <br></br>
           </Typography>
         </Box>
 
         <Box
           component="img"
-          src="https://img.freepik.com/free-vector/healthcare-professionals-working-together_53876-43071.jpg"
+          src="https://img.freepik.com/premium-vector/medicine-healthcare-with-online-medical-consultation-doctor-appointment-flat-design_269730-361.jpg"
           alt="Login Illustration"
           sx={{
             width: 500,
