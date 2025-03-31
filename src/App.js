@@ -2,6 +2,7 @@ import { Button, Container, Grid, Typography, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { FaGooglePlay, FaApple,FaInfoCircle, FaStar, FaUserMd, FaHeadset, FaCreditCard, FaPills, FaBell, FaShieldAlt } from "react-icons/fa";
 import Register from "./Register";
+import Login from "./Login";
 const App = () => {
   return (
     <Router>
@@ -11,6 +12,7 @@ const App = () => {
 
         {/* Register Route */}
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
