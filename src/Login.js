@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Button, TextField, Typography, Box, AppBar, Toolbar, IconButton, Container } from "@mui/material";
 import { FaUser, FaEnvelope, FaLock, FaSignInAlt, FaMedkit } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,12 +23,13 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/login", { email, password });
-      console.log(response.data);
+      const response = await axios.post("https://medicine-expiry-8lj5.onrender.com/api/user/login", { email, password });
+      localStorage.setItem("token", response.data.token);
       alert("Login successful!");
+      navigate("/dashboard"); // Redirect to dashboard or another page
     } catch (err) {
       console.error(err);
-      setError(err.response ? err.response.data : "An error occurred during login.");
+      setError(err.response ? err.response.data.message : "An error occurred during login.");
     } finally {
       setLoading(false);
     }
@@ -45,21 +47,11 @@ const Login = () => {
             MediConnect
           </Typography>
           <div>
-            <Link to="/" style={{ color: "white", textDecoration: "none", marginRight: "20px" }}>
-              Home
-            </Link>
-            <Link to="/contact" style={{ color: "white", textDecoration: "none", marginRight: "20px" }}>
-              Contact
-            </Link>
-            <Link to="/connect" style={{ color: "white", textDecoration: "none", marginRight: "20px" }}>
-              Connect
-            </Link>
-            <Link to="/services" style={{ color: "white", textDecoration: "none", marginRight: "20px" }}>
-              Services
-            </Link>
-            <Link to="/aboutus" style={{ color: "white", textDecoration: "none" }}>
-              About Us
-            </Link>
+            <Link to="/" style={{ color: "white", textDecoration: "none", marginRight: "20px" }}>Home</Link>
+            <Link to="/contact" style={{ color: "white", textDecoration: "none", marginRight: "20px" }}>Contact</Link>
+            <Link to="/connect" style={{ color: "white", textDecoration: "none", marginRight: "20px" }}>Connect</Link>
+            <Link to="/services" style={{ color: "white", textDecoration: "none", marginRight: "20px" }}>Services</Link>
+            <Link to="/aboutus" style={{ color: "white", textDecoration: "none" }}>About Us</Link>
           </div>
         </Toolbar>
       </AppBar>
@@ -87,13 +79,6 @@ const Login = () => {
             Login to MediConnect
           </Typography>
 
-          {/* Quote */}
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 2 }}>
-            <Typography variant="body2" color="textSecondary" sx={{ maxWidth: "90%" }}>
-              "Empowering health, connecting lives. Your well-being starts here."
-            </Typography>
-          </Box>
-<br></br>
           {error && (
             <Typography color="error" variant="body2" textAlign="center" marginBottom={2}>
               {error}
@@ -142,11 +127,10 @@ const Login = () => {
           </form>
 
           <Typography variant="body2" textAlign="center" marginTop={2}>
-            Don't have an account?{" "}
+            Don't have an account? {" "}
             <Link to="/register" style={{ color: "#16a34a", textDecoration: "none" }}>
               Register here
             </Link>
-            <br></br>
           </Typography>
         </Box>
 

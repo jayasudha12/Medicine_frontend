@@ -23,7 +23,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/register", {
+      const response = await axios.post(`https://medicine-expiry-8lj5.onrender.com/api/user/register`, {
         userName,
         email,
         password,
