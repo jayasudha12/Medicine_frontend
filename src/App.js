@@ -1,6 +1,7 @@
 import { Button, Container, Grid, Typography, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { FaGooglePlay, FaApple,FaInfoCircle, FaStar, FaUserMd, FaHeadset, FaCreditCard, FaPills, FaBell, FaShieldAlt } from "react-icons/fa";
+import { FaGooglePlay, FaApple,FaInfoCircle, FaStar, FaUserMd, FaHeadset,FaTwitter, FaCreditCard, FaPills, FaBell, FaShieldAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import Register from "./Register";
 import Login from "./Login";
 import Medicine from "./Medicine";
