@@ -1,8 +1,10 @@
 import { Button, Container, Grid, Typography, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { FaGooglePlay, FaApple,FaInfoCircle, FaStar, FaUserMd, FaHeadset, FaCreditCard, FaPills, FaBell, FaShieldAlt } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 import Register from "./Register";
 import Login from "./Login";
+import Medicine from "./Medicine";
 const App = () => {
   return (
     <Router>
@@ -13,6 +15,7 @@ const App = () => {
         {/* Register Route */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/medicine" element={<Medicine />} />
       </Routes>
     </Router>
   );
@@ -47,10 +50,12 @@ function MedicalAppUI() {
           ))}
         </ul>
         <div style={{ display: "flex", gap: "16px" }}>
-          <Button variant="outline">Log In</Button>
-          <Button style={{ backgroundColor: "#16a34a", color: "white", padding: "8px 16px", borderRadius: "8px" }}>
-            Sign Up
-          </Button>
+        <Link to="/register">
+        <Button variant="outlined">Sign Up</Button>
+      </Link>
+      <Link to="/login">
+        <Button variant="outlined">Log In</Button>
+      </Link>
         </div>
       </nav>
 
