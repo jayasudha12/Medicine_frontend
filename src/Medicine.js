@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, TextField, Typography, Box, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 
 const Medicine = () => {
-  const [medicine, setMedicine] = useState(null); // Single medicine data
+  const [medicines, setMedicines] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     expiryDate: "",
@@ -13,11 +13,9 @@ const Medicine = () => {
     drugLicense: "",
   });
 
-  const medicineId = "some-medicine-id"; // Replace with the ID you want to fetch
-
   useEffect(() => {
-    fetchMedicineById(medicineId);
-  }, [medicineId]);
+    fetchMedicines();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,44 +23,45 @@ const Medicine = () => {
 
   const token = localStorage.getItem("token"); // Get token from local storage
 
-  const fetchMedicineById = async (id) => {
-    try {
-      const response = await axios.get(`https://medicine-expiry-8lj5.onrender.com/api/medicine/getOne/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setMedicine(response.data);
-    } catch (error) {
-      console.error("Error fetching medicine", error);
-    }
-  };
+const fetchMedicines = async () => {
+  try {
+    const response = await axios.get("https://medicine-expiry-8lj5.onrender.com/api/medicine/getAll", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setMedicines(response.data);
+  } catch (error) {
+    console.error("Error fetching medicines", error);
+  }
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(
-        "https://medicine-expiry-8lj5.onrender.com/api/medicine/add",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      fetchMedicineById(medicineId);
-      setFormData({ name: "", expiryDate: "", manufactureDate: "", chemicalContent: "", quantity: "", drugLicense: "" });
-    } catch (error) {
-      console.error("Error adding medicine", error);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`https://medicine-expiry-8lj5.onrender.com/api/medicine/delete/${id}`, {
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    await axios.post(
+      "https://medicine-expiry-8lj5.onrender.com/api/medicine/add",
+      formData,
+      {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setMedicine(null); // Reset the medicine data after deletion
-    } catch (error) {
-      console.error("Error deleting medicine", error);
-    }
-  };
+      }
+    );
+    fetchMedicines();
+    setFormData({ name: "", expiryDate: "", manufactureDate: "", chemicalContent: "", quantity: "", drugLicense: "" });
+  } catch (error) {
+    console.error("Error adding medicine", error);
+  }
+};
+
+const handleDelete = async (id) => {
+  try {
+    await axios.delete(`https://medicine-expiry-8lj5.onrender.com/api/medicine/delete/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    fetchMedicines();
+  } catch (error) {
+    console.error("Error deleting medicine", error);
+  }
+};
+
 
   return (
     <Container>
@@ -78,21 +77,21 @@ const Medicine = () => {
         <Button type="submit" variant="contained" color="primary" fullWidth>Add Medicine</Button>
       </Box>
 
-      {medicine ? (
-        <TableContainer component={Paper} sx={{ marginTop: 4 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Expiry Date</TableCell>
-                <TableCell>Manufacture Date</TableCell>
-                <TableCell>Chemical Content</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Drug License</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+      <TableContainer component={Paper} sx={{ marginTop: 4 }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Expiry Date</TableCell>
+              <TableCell>Manufacture Date</TableCell>
+              <TableCell>Chemical Content</TableCell>
+              <TableCell>Quantity</TableCell>
+              <TableCell>Drug License</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {medicines.map((medicine) => (
               <TableRow key={medicine._id}>
                 <TableCell>{medicine.name}</TableCell>
                 <TableCell>{medicine.expiryDate}</TableCell>
@@ -104,12 +103,10 @@ const Medicine = () => {
                   <Button color="error" onClick={() => handleDelete(medicine._id)}>Delete</Button>
                 </TableCell>
               </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      ) : (
-        <Typography variant="h6" textAlign="center" marginY={3}>No medicine found</Typography>
-      )}
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 };
