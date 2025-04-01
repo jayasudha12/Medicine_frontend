@@ -1,10 +1,9 @@
 import { Button, Container, Grid, Typography, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { FaGooglePlay, FaApple,FaInfoCircle, FaStar, FaUserMd, FaHeadset,FaTwitter, FaCreditCard, FaPills, FaBell, FaShieldAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaGooglePlay, FaApple,FaInfoCircle, FaTwitter,FaStar, FaUserMd, FaHeadset, FaCreditCard, FaPills, FaBell, FaShieldAlt } from "react-icons/fa";
 import Register from "./Register";
+import { Link } from 'react-router-dom';
 import Login from "./Login";
-import Medicine from "./Medicine";
 const App = () => {
   return (
     <Router>
@@ -15,7 +14,6 @@ const App = () => {
         {/* Register Route */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/medicine" element={<Medicine />} />
       </Routes>
     </Router>
   );
@@ -50,12 +48,13 @@ function MedicalAppUI() {
           ))}
         </ul>
         <div style={{ display: "flex", gap: "16px" }}>
-        <Link to="/register">
-        <Button variant="outlined">Sign Up</Button>
-      </Link>
-      <Link to="/login">
-        <Button variant="outlined">Log In</Button>
-      </Link>
+        <Button variant="outline">
+  <Link to="/login" style={{ textDecoration: "none", color: "inherit" }}>Log In</Link>
+</Button>
+
+<Button style={{ backgroundColor: "#16a34a", color: "white", padding: "8px 16px", borderRadius: "8px" }}>
+  <Link to="/register" style={{ textDecoration: "none", color: "inherit" }}>Sign Up</Link>
+</Button>
         </div>
       </nav>
 
