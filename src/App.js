@@ -1,7 +1,6 @@
 import { Button, Container, Grid, Typography, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { FaGooglePlay, FaApple,FaInfoCircle, FaStar, FaUserMd, FaHeadset, FaCreditCard, FaPills, FaBell, FaShieldAlt } from "react-icons/fa";
-import { Link } from 'react-router-dom';
 import Register from "./Register";
 import Login from "./Login";
 import Medicine from "./Medicine";
@@ -219,6 +218,38 @@ function MedicalAppUI() {
           ))}
         </div>
       </section>
+            {/* Footer Section */}
+            <footer
+  style={{
+    backgroundColor: "white", // Updated background color
+    color: "black",
+    padding: "40px 40px",
+    textAlign: "center",
+    marginTop: "10px",
+  }}
+>
+  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "14px" }}>
+    <p style={{ maxWidth: "600px", color: "black" }}>
+      Your trusted healthcare partner, providing seamless medicine exchange and tracking solutions.
+    </p>
+    <div style={{ display: "flex", gap: "16px", marginTop: "8px" }}>
+      <a href="#" style={{ textDecoration: "none", color: "green" }}>
+        <FaGooglePlay style={{ fontSize: "32px" }} />
+      </a>
+      <a href="#" style={{ textDecoration: "none", color: "green" }}>
+        <FaApple style={{ fontSize: "32px" }} />
+      </a>
+      <a href="#" style={{ textDecoration: "none", color: "green" }}>
+        <FaTwitter style={{ fontSize: "32px" }} />
+      </a>
+    </div>
+    <p style={{ marginTop: "16px", fontSize: "14px", color: "black" }}>
+      © 2024 MediConnect. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+
     </div>
   );
 }
