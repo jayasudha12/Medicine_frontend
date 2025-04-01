@@ -4,6 +4,7 @@ import { FaGooglePlay, FaApple,FaInfoCircle, FaTwitter,FaStar, FaUserMd, FaHeads
 import Register from "./Register";
 import { Link } from 'react-router-dom';
 import Login from "./Login";
+import Medicine from "./Medicine";
 const App = () => {
   return (
     <Router>
@@ -14,6 +15,7 @@ const App = () => {
         {/* Register Route */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/medicine" element={<Medicine />} />
       </Routes>
     </Router>
   );
