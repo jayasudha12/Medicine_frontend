@@ -5,6 +5,7 @@ import Register from "./Register";
 import { Link } from 'react-router-dom';
 import Login from "./Login";
 import Medicine from "./Medicine";
+import MediConnectPage from "./Med";
 const App = () => {
   return (
     <Router>
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/medicine" element={<Medicine />} />
+        <Route path="/med" element={<MediConnectPage />} />
       </Routes>
     </Router>
   );

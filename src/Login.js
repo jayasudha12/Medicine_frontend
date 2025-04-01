@@ -26,7 +26,7 @@ const Login = () => {
       const response = await axios.post("https://medicine-expiry-8lj5.onrender.com/api/user/login", { email, password });
       localStorage.setItem("token", response.data.token);
       alert("Login successful!");
-      navigate("/medicine"); 
+      navigate("/med"); 
     } catch (err) {
       console.error(err);
       setError(err.response ? err.response.data.message : "An error occurred during login.");
