@@ -4,6 +4,7 @@ import { FaGooglePlay, FaApple,FaInfoCircle, FaTwitter,FaStar, FaUserMd, FaHeads
 import Register from "./Register";
 import { Link } from 'react-router-dom';
 import Login from "./Login";
+import Buy from "./Buy";
 import Medicine from "./Medicine";
 import MediConnectPage from "./Med";
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/medicine" element={<Medicine />} />
         <Route path="/med" element={<MediConnectPage />} />
+        <Route path="/buy" element={<Buy />} />
       </Routes>
     </Router>
   );
