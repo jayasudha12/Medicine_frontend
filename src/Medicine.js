@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, TextField, Typography, Box, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Button, TextField, InputAdornment, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { FaMedkit, FaSearch, FaBell } from "react-icons/fa";
 
-const Medicine = () => {
-  const [medicine, setMedicine] = useState(null); // Single medicine data
+const MedicineManagement = () => {
+  const [medicines, setMedicines] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     expiryDate: "",
@@ -13,26 +14,24 @@ const Medicine = () => {
     drugLicense: "",
   });
 
-  const medicineId = "some-medicine-id"; // Replace with the ID you want to fetch
-
   useEffect(() => {
-    fetchMedicineById(medicineId);
-  }, [medicineId]);
+    fetchMedicines();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const token = localStorage.getItem("token"); // Get token from local storage
+  const token = localStorage.getItem("token");
 
-  const fetchMedicineById = async (id) => {
+  const fetchMedicines = async () => {
     try {
-      const response = await axios.get(`https://medicine-expiry-8lj5.onrender.com/api/medicine/getOne/${id}`, {
+      const response = await axios.get("https://medicine-expiry-8lj5.onrender.com/api/medicine/getAll", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setMedicine(response.data);
+      setMedicines(response.data);
     } catch (error) {
-      console.error("Error fetching medicine", error);
+      console.error("Error fetching medicines", error);
     }
   };
 
@@ -46,7 +45,7 @@ const Medicine = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      fetchMedicineById(medicineId);
+      fetchMedicines();
       setFormData({ name: "", expiryDate: "", manufactureDate: "", chemicalContent: "", quantity: "", drugLicense: "" });
     } catch (error) {
       console.error("Error adding medicine", error);
@@ -58,7 +57,7 @@ const Medicine = () => {
       await axios.delete(`https://medicine-expiry-8lj5.onrender.com/api/medicine/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setMedicine(null); // Reset the medicine data after deletion
+      fetchMedicines();
     } catch (error) {
       console.error("Error deleting medicine", error);
     }
@@ -67,51 +66,59 @@ const Medicine = () => {
   return (
     <Container>
       <Typography variant="h4" textAlign="center" marginY={3}>Medicine Management</Typography>
-      
-      <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: 500, margin: "auto", boxShadow: 3, padding: 3, borderRadius: 2 }}>
-        <TextField label="Name" name="name" value={formData.name} onChange={handleChange} required fullWidth />
-        <TextField label="Expiry Date" type="date" name="expiryDate" value={formData.expiryDate} onChange={handleChange} required fullWidth InputLabelProps={{ shrink: true }} />
-        <TextField label="Manufacture Date" type="date" name="manufactureDate" value={formData.manufactureDate} onChange={handleChange} required fullWidth InputLabelProps={{ shrink: true }} />
-        <TextField label="Chemical Content" name="chemicalContent" value={formData.chemicalContent} onChange={handleChange} required fullWidth />
-        <TextField label="Quantity" type="number" name="quantity" value={formData.quantity} onChange={handleChange} required fullWidth />
-        <TextField label="Drug License" name="drugLicense" value={formData.drugLicense} onChange={handleChange} required fullWidth />
-        <Button type="submit" variant="contained" color="primary" fullWidth>Add Medicine</Button>
-      </Box>
+      <Grid container spacing={4}>
+        {/* Form on the left side with reduced width */}
+        <Grid item xs={12} md={5}>
+          <Paper elevation={3} sx={{ padding: 3, boxShadow: 3, borderRadius: 2 }}>
+            <Typography variant="h6" textAlign="center">Add Medicine</Typography>
+            <form onSubmit={handleSubmit}>
+              <TextField label="Name" name="name" value={formData.name} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Expiry Date" type="date" name="expiryDate" value={formData.expiryDate} onChange={handleChange} required fullWidth InputLabelProps={{ shrink: true }} margin="normal" />
+              <TextField label="Manufacture Date" type="date" name="manufactureDate" value={formData.manufactureDate} onChange={handleChange} required fullWidth InputLabelProps={{ shrink: true }} margin="normal" />
+              <TextField label="Chemical Content" name="chemicalContent" value={formData.chemicalContent} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Quantity" type="number" name="quantity" value={formData.quantity} onChange={handleChange} required fullWidth margin="normal" />
+              <TextField label="Drug License" name="drugLicense" value={formData.drugLicense} onChange={handleChange} required fullWidth margin="normal" />
+              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>Add Medicine</Button>
+            </form>
+          </Paper>
+        </Grid>
 
-      {medicine ? (
-        <TableContainer component={Paper} sx={{ marginTop: 4 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Expiry Date</TableCell>
-                <TableCell>Manufacture Date</TableCell>
-                <TableCell>Chemical Content</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Drug License</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow key={medicine._id}>
-                <TableCell>{medicine.name}</TableCell>
-                <TableCell>{medicine.expiryDate}</TableCell>
-                <TableCell>{medicine.manufactureDate}</TableCell>
-                <TableCell>{medicine.chemicalContent}</TableCell>
-                <TableCell>{medicine.quantity}</TableCell>
-                <TableCell>{medicine.drugLicense}</TableCell>
-                <TableCell>
-                  <Button color="error" onClick={() => handleDelete(medicine._id)}>Delete</Button>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      ) : (
-        <Typography variant="h6" textAlign="center" marginY={3}>No medicine found</Typography>
-      )}
+        {/* Table on the right side */}
+        <Grid item xs={12} md={7}>
+          <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
+            <Table>
+              <TableHead sx={{ backgroundColor: "#2E7D32", color: "white" }}>
+                <TableRow>
+                  <TableCell sx={{ color: "white" }}>Name</TableCell>
+                  <TableCell sx={{ color: "white" }}>Expiry Date</TableCell>
+                  <TableCell sx={{ color: "white" }}>Manufacture Date</TableCell>
+                  <TableCell sx={{ color: "white" }}>Chemical Content</TableCell>
+                  <TableCell sx={{ color: "white" }}>Quantity</TableCell>
+                  <TableCell sx={{ color: "white" }}>Drug License</TableCell>
+                  <TableCell sx={{ color: "white" }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {medicines.map((medicine) => (
+                  <TableRow key={medicine._id}>
+                    <TableCell>{medicine.name}</TableCell>
+                    <TableCell>{medicine.expiryDate}</TableCell>
+                    <TableCell>{medicine.manufactureDate}</TableCell>
+                    <TableCell>{medicine.chemicalContent}</TableCell>
+                    <TableCell>{medicine.quantity}</TableCell>
+                    <TableCell>{medicine.drugLicense}</TableCell>
+                    <TableCell>
+                      <Button color="error" onClick={() => handleDelete(medicine._id)}>Delete</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
 
-export default Medicine;
+export default MedicineManagement;
