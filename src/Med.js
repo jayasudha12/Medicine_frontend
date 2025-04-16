@@ -61,7 +61,7 @@ const MediConnectPage = () => {
               <Typography variant="body1" sx={{ marginY: 2 }}>
                 Purchase affordable and essential medicines with ease.
               </Typography>
-              <Link to="/buy">
+              <Link to="/category">
               <Button variant="contained" color="secondary" startIcon={<FaShoppingCart />} fullWidth>
                 Buy
               </Button>
