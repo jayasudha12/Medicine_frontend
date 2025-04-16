@@ -7,6 +7,9 @@ import Login from "./Login";
 import Buy from "./Buy";
 import Medicine from "./Medicine";
 import MediConnectPage from "./Med";
+import CategoryPage from "./Category";
+import CategoryMedicines from "./Cat";
+import AboutUs from "./Aboutus";
 const App = () => {
   return (
     <Router>
@@ -17,9 +20,14 @@ const App = () => {
         {/* Register Route */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/medicine" element={<Medicine />} />
         <Route path="/med" element={<MediConnectPage />} />
         <Route path="/buy" element={<Buy />} />
+        <Route path="/cat/:category" element={<CategoryMedicines />} />
+
+
+        <Route path="/category" element={<CategoryPage/>} />
       </Routes>
     </Router>
   );

@@ -13,28 +13,51 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
+    setError(""); // Reset error message
+  
+    // Basic validation
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
-      const response = await axios.post("https://medicine-expiry-8lj5.onrender.com/api/user/login", { email, password });
-      localStorage.setItem("token", response.data.token);
-      alert("Login successful!");
-      navigate("/med"); 
+      // Make the POST request to the backend login endpoint with headers
+      const response = await axios.post(
+        `https://medicine-expiry-8lj5.onrender.com/api/user/login`,
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      console.log("🚀 Response Data:", response.data);
+  
+      // Check if the response contains token and user info
+      if (response.data.token && response.data.user) {
+        // Save the token and userId to localStorage
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("userId", response.data.user._id);
+  
+        alert("Login successful!");
+        navigate("/med"); // Redirect to a protected page
+      }
+  
     } catch (err) {
-      console.error(err);
-      setError(err.response ? err.response.data.message : "An error occurred during login.");
+      console.error("Login Error:", err);
+  
+      const errorMessage = err.response && err.response.data && err.response.data.message
+        ? err.response.data.message
+        : "An error occurred during login.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div>
       {/* Navbar */}
