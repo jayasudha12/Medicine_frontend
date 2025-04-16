@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { AppBar, Toolbar, IconButton, Typography, Button, TextField, InputAdornment, Container, Grid, Paper } from "@mui/material";
+import { FaMedkit, FaSearch, FaDonate, FaShoppingCart, FaBell } from "react-icons/fa";
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -62,15 +64,18 @@ const MedicineManagement = () => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData();
-
+  
     Object.entries(medicineDetails).forEach(([key, value]) => {
       if (key === 'image') {
-        if (value) formData.append('file', value);
+        if (value) {
+          formData.append('file', value); // binary image
+        }
       } else {
         formData.append(key, value);
       }
     });
-
+    
+  
     try {
       if (editingId) {
         await axios.put(
@@ -95,7 +100,7 @@ const MedicineManagement = () => {
           }
         );
       }
-
+  
       await fetchMedicines();
       setMedicineDetails({
         name: '',
@@ -117,6 +122,8 @@ const MedicineManagement = () => {
       setLoading(false);
     }
   };
+  
+  
 
   const handleEdit = async (id) => {
     try {
@@ -171,9 +178,19 @@ const MedicineManagement = () => {
   };
 
   return (
-    <div style={{ padding: '40px', background: '#e8f5e9', minHeight: '100vh', fontFamily: 'Arial, sans-serif' }}>
+    
+    <div style={{ padding: '0px', background: '#e8f5e9', minHeight: '100vh', fontFamily: 'Arial, sans-serif' }}>
+      <AppBar position="static" sx={{ backgroundColor: "#2E7D32" }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between", padding: "0 16px" }}>
+          <IconButton edge="start" color="inherit" aria-label="logo">
+            <FaMedkit size={30} />
+          </IconButton>
+          <Typography variant="h6" sx={{ flexGrow: 1, paddingLeft: "8px" }}>
+            MediConnect
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <h1 style={{ textAlign: 'center', color: '#1b5e20', marginBottom: '40px', fontSize: '32px' }}>
-        Donate Your Medicines
       </h1>
 
       {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
