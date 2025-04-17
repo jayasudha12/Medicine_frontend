@@ -10,6 +10,7 @@ import MediConnectPage from "./Med";
 import CategoryPage from "./Category";
 import CategoryMedicines from "./Cat";
 import AboutUs from "./Aboutus";
+import ViewDetailsPage from "./View";
 const App = () => {
   return (
     <Router>
@@ -25,8 +26,7 @@ const App = () => {
         <Route path="/med" element={<MediConnectPage />} />
         <Route path="/buy" element={<Buy />} />
         <Route path="/cat/:category" element={<CategoryMedicines />} />
-
-
+        <Route path="/view" element={<ViewDetailsPage />} />
         <Route path="/category" element={<CategoryPage/>} />
       </Routes>
     </Router>

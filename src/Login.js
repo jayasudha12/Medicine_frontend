@@ -24,10 +24,29 @@ const Login = () => {
     setLoading(true);
   
     try {
-      const response = await axios.post("https://medicine-expiry-8lj5.onrender.com/api/user/login", { email, password });
-      localStorage.setItem("token", response.data.token);
-      alert("Login successful!");
-      navigate("/med"); 
+      // Make the POST request to the backend login endpoint with headers
+      const response = await axios.post(
+        "https://medicine-expiry-8lj5.onrender.com/api/user/login",
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      console.log("🚀 Response Data:", response.data);
+  
+      // Check if the response contains token and user info
+      if (response.data.token && response.data.user) {
+        // Save the token and userId to localStorage
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("userId", response.data.user._id);
+  
+        alert("Login successful!");
+        navigate("/med"); // Redirect to a protected page
+      }
+  
     } catch (err) {
       console.error("Login Error:", err);
   
@@ -38,6 +57,24 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Decode the JWT token and get the payload
+  const decodeToken = (token) => {
+    if (!token) return null;
+    const payload = token.split('.')[1]; // Get the payload part of the JWT
+    const decoded = JSON.parse(atob(payload)); // Decode it from base64
+    return decoded;
+  };
+
+  // Get the token from localStorage
+  const token = localStorage.getItem("token");
+  const decodedToken = decodeToken(token);
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login"); // Redirect to login page after logout
   };
 
   return (
@@ -115,16 +152,7 @@ const Login = () => {
           </Typography>
 
           {/* Display decoded token details */}
-          {decodedToken && (
-            <Box sx={{ marginTop: 3 }}>
-              <Typography variant="body2" textAlign="center">
-                Logged in as User ID: {decodedToken.userId}
-              </Typography>
-              <Button variant="outlined" color="secondary" onClick={handleLogout} fullWidth sx={{ marginTop: 2 }}>
-                Logout
-              </Button>
-            </Box>
-          )}
+       
         </Box>
 
         <Box component="img" src="https://img.freepik.com/premium-vector/medicine-healthcare-with-online-medical-consultation-doctor-appointment-flat-design_269730-361.jpg" alt="Login Illustration" sx={{ width: 500, height: 400, objectFit: "cover", borderRadius: "8px", margin: "20px" }} />
