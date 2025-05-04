@@ -1,35 +1,45 @@
-// AdminDashboard.js
 import React from "react";
-import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { AppBar, Toolbar, Button, Typography, Container } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Admin = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/login");
-  };
-
   return (
-    <Box>
-      <AppBar position="static" sx={{ backgroundColor: "#1f2937" }}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography variant="h6">Admin Dashboard</Typography>
-          <Button color="inherit" onClick={handleLogout}>
-            Logout
+    <>
+      {/* Navigation Bar */}
+      <AppBar position="static" sx={{ backgroundColor: "#2563eb" }}>
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Admin Dashboard
+          </Typography>
+          <Button color="inherit">
+            <Link to="/admin-med" style={{ color: "white", textDecoration: "none" }}>
+              Medicines
+            </Link>
+          </Button>
+          <Button color="inherit">
+            <Link to="/admin-delivery" style={{ color: "white", textDecoration: "none" }}>
+              Delivery Agents
+            </Link>
+          </Button>
+          {/* New Links for Managing Orders */}
+          <Button color="inherit">
+            <Link to="/admin-orders" style={{ color: "white", textDecoration: "none" }}>
+              Orders
+            </Link>
+          </Button>
+          <Button color="inherit">
+            <Link to="/admin-assign-order" style={{ color: "white", textDecoration: "none" }}>
+              Assign Orders
+            </Link>
           </Button>
         </Toolbar>
       </AppBar>
-      <Box sx={{ padding: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome, Admin!
-        </Typography>
-        <Typography>
-          This is a simple static admin panel. You can add admin-specific functionalities here.
-        </Typography>
-      </Box>
-    </Box>
+
+      {/* Main Content */}
+      <Container sx={{ marginTop: 4 }}>
+        <Typography variant="h5">Welcome to Admin Dashboard</Typography>
+      </Container>
+    </>
   );
 };
 

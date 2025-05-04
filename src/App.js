@@ -12,6 +12,9 @@ import CategoryMedicines from "./Cat";
 import AboutUs from "./Aboutus";
 import Admin from "./Admin";
 import ViewDetailsPage from "./View";
+import DeliveryApprove from "./Deliveryapprove";
+import MedApproval from "./Medapproval";
+import AdminAssignOrder from "./Adminassign";
 const App = () => {
   return (
     <Router>
@@ -28,6 +31,11 @@ const App = () => {
         <Route path="/buy" element={<Buy />} />
         <Route path="/cat/:category" element={<CategoryMedicines />} />
         <Route path="/admin" element={<Admin />} />
+
+        <Route path="/admin-med" element={<MedApproval />} />
+        <Route path="/admin-delivery" element={<DeliveryApprove />} />
+
+        <Route path="/admin-assign-order" element={<AdminAssignOrder />} />
 
 
         <Route path="/view" element={<ViewDetailsPage />} />
