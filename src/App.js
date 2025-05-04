@@ -11,6 +11,7 @@ import CategoryPage from "./Category";
 import CategoryMedicines from "./Cat";
 import AboutUs from "./Aboutus";
 import Admin from "./Admin";
+import ViewDetailsPage from "./View";
 const App = () => {
   return (
     <Router>
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/admin" element={<Admin />} />
 
 
+        <Route path="/view" element={<ViewDetailsPage />} />
         <Route path="/category" element={<CategoryPage/>} />
       </Routes>
     </Router>
@@ -95,7 +97,7 @@ function MedicalAppUI() {
             
           <Button
   style={{
-    backgroundColor: "#16a34a", // Green color for consistency with your theme
+    backgroundColor: "#16a34a", 
     color: "white",
     display: "flex",
     alignItems: "center",
