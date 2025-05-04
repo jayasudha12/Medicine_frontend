@@ -15,6 +15,7 @@ import ViewDetailsPage from "./View";
 import DeliveryApprove from "./Deliveryapprove";
 import MedApproval from "./Medapproval";
 import AdminAssignOrder from "./Adminassign";
+import AddDeliveryAgentForm from "./DeliveryAgentform";
 const App = () => {
   return (
     <Router>
@@ -36,6 +37,8 @@ const App = () => {
         <Route path="/admin-delivery" element={<DeliveryApprove />} />
 
         <Route path="/admin-assign-order" element={<AdminAssignOrder />} />
+
+        <Route path="/delivery-form" element={<AddDeliveryAgentForm />} />
 
 
         <Route path="/view" element={<ViewDetailsPage />} />
@@ -80,6 +83,10 @@ function MedicalAppUI() {
 
 <Button style={{ backgroundColor: "#16a34a", color: "white", padding: "8px 16px", borderRadius: "8px" }}>
   <Link to="/register" style={{ textDecoration: "none", color: "inherit" }}>Sign Up</Link>
+</Button>
+
+<Button style={{ backgroundColor: "#16a34a", color: "white", padding: "8px 16px", borderRadius: "8px" }}>
+  <Link to="/delivery-form" style={{ textDecoration: "none", color: "inherit" }}>Delivery-agent form</Link>
 </Button>
         </div>
       </nav>
