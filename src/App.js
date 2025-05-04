@@ -11,7 +11,7 @@ import CategoryPage from "./Category";
 import CategoryMedicines from "./Cat";
 import AboutUs from "./Aboutus";
 import Admin from "./Admin";
-import ViewDetailsPage from "./View";
+
 import DeliveryApprove from "./Deliveryapprove";
 import MedApproval from "./Medapproval";
 import AdminAssignOrder from "./Adminassign";
@@ -43,7 +43,6 @@ const App = () => {
         <Route path="/delivery-form" element={<AddDeliveryAgentForm />} />
 
 
-        <Route path="/view" element={<ViewDetailsPage />} />
         <Route path="/category" element={<CategoryPage/>} />
       </Routes>
     </Router>
