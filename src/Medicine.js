@@ -75,7 +75,6 @@ const MedicineManagement = () => {
       }
     });
     
-  
     try {
       if (editingId) {
         await axios.put(
@@ -123,8 +122,6 @@ const MedicineManagement = () => {
     }
   };
   
-  
-
   const handleEdit = async (id) => {
     try {
       const response = await axios.get(
@@ -178,7 +175,6 @@ const MedicineManagement = () => {
   };
 
   return (
-    
     <div style={{ padding: '0px', background: '#e8f5e9', minHeight: '100vh', fontFamily: 'Arial, sans-serif' }}>
       <AppBar position="static" sx={{ backgroundColor: "#2E7D32" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between", padding: "0 16px" }}>
@@ -190,8 +186,7 @@ const MedicineManagement = () => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <h1 style={{ textAlign: 'center', color: '#1b5e20', marginBottom: '40px', fontSize: '32px' }}>
-      </h1>
+      <h1 style={{ textAlign: 'center', color: '#1b5e20', marginBottom: '40px', fontSize: '32px' }}></h1>
 
       {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
 
@@ -214,15 +209,9 @@ const MedicineManagement = () => {
             {editingId ? 'Edit Medicine' : 'Add Medicine'}
           </h2>
 
-          {[
-            ['Name', 'name', 'text'],
-            ['Expiry Date', 'expiryDate', 'date'],
-            ['Manufacture Date', 'manufactureDate', 'date'],
-            ['Chemical Content', 'chemicalContent', 'text'],
-            ['Quantity', 'quantity', 'number'],
-            ['Drug License', 'drugLicense', 'text'],
-            ['Category', 'category', 'text'],
-          ].map(([label, name, type]) => (
+          {[['Name', 'name', 'text'], ['Expiry Date', 'expiryDate', 'date'], ['Manufacture Date', 'manufactureDate', 'date'], 
+            ['Chemical Content', 'chemicalContent', 'text'], ['Quantity', 'quantity', 'number'], 
+            ['Drug License', 'drugLicense', 'text']].map(([label, name, type]) => (
             <div key={name} style={{ marginBottom: '16px' }}>
               <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '6px', color: '#1b5e20' }}>
                 {label}
@@ -245,6 +234,33 @@ const MedicineManagement = () => {
               />
             </div>
           ))}
+
+          <div key="category" style={{ marginBottom: '16px' }}>
+            <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '6px', color: '#1b5e20' }}>
+              Category
+            </label>
+            <select
+              name="category"
+              value={medicineDetails.category}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: '100%',
+                padding: '10px',
+                borderRadius: '10px',
+                border: '1px solid #a5d6a7',
+                fontSize: '14px',
+                backgroundColor: '#f9fff9',
+              }}
+            >
+              <option value="">Select Category</option>
+              <option value="Prescription Medicine">Prescription Medicines</option>
+              <option value="OTC Medicine">OTC Medicines</option>
+              <option value="Emergency Medicine">Emergency Medicines</option>
+              <option value="Elderly medicinee">Elderly Medicines</option>
+              <option value="Other">Others</option>
+            </select>
+          </div>
 
           <div style={{ marginBottom: '20px' }}>
             <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '6px', color: '#1b5e20' }}>
@@ -322,54 +338,42 @@ const MedicineManagement = () => {
               }}
             >
               <img
-                src={medicine.imageUrl}
+                src={medicine.imageUrl || 'https://via.placeholder.com/150'}
                 alt={medicine.name}
-                style={{
-                  width: '80px',
-                  height: '80px',
-                  borderRadius: '10px',
-                  objectFit: 'cover',
-                }}
+                style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px' }}
               />
               <div style={{ flex: 1 }}>
-                <h3 style={{ margin: '0 0 5px 0', color: '#2e7d32' }}>{medicine.name}</h3>
-                <p style={{ margin: '2px 0' }}><strong>Qty:</strong> {medicine.quantity}</p>
-                <p style={{ margin: '2px 0' }}><strong>EXP:</strong> {new Date(medicine.expiryDate).toLocaleDateString()}</p>
-                <p style={{ margin: '2px 0' }}><strong>Category:</strong> {medicine.category}</p>
+                <h3 style={{ fontSize: '18px', color: '#2e7d32', marginBottom: '5px' }}>{medicine.name}</h3>
+                <p style={{ fontSize: '14px', color: '#388e3c' }}>Category: {medicine.category}</p>
+                <p style={{ fontSize: '14px', color: '#2e7d32' }}>Quantity: {medicine.quantity}</p>
+                <p style={{ fontSize: '14px', color: '#2e7d32' }}>Expiry: {medicine.expiryDate}</p>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <FaEdit
-                  title="Edit"
+              <div>
+                <button
                   onClick={() => handleEdit(medicine._id)}
                   style={{
-                    fontSize: '20px',
-                    color: '#f9a825',
+                    backgroundColor: '#388e3c',
+                    color: 'white',
+                    borderRadius: '10px',
+                    padding: '5px 10px',
                     cursor: 'pointer',
-                    padding: '8px',
-                    borderRadius: '50%',
-                    backgroundColor: '#fffde7',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-                    transition: 'transform 0.2s',
+                    marginRight: '10px',
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                />
-                <FaTrash
-                  title="Delete"
+                >
+                  <FaEdit />
+                </button>
+                <button
                   onClick={() => handleDelete(medicine._id)}
                   style={{
-                    fontSize: '20px',
-                    color: '#e53935',
+                    backgroundColor: '#d32f2f',
+                    color: 'white',
+                    borderRadius: '10px',
+                    padding: '5px 10px',
                     cursor: 'pointer',
-                    padding: '8px',
-                    borderRadius: '50%',
-                    backgroundColor: '#ffebee',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-                    transition: 'transform 0.2s',
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                />
+                >
+                  <FaTrash />
+                </button>
               </div>
             </div>
           ))}

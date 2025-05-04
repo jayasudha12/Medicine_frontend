@@ -249,7 +249,7 @@ const CategoryPage = () => {
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ display: "flex", gap: 3 }}>
           {/* Sidebar */}
-          <Box sx={{ width: "25%", position: "sticky", top: 90,ml: -20 }}>
+          <Box sx={{ width: "25%", position: "sticky", top: 90,ml: -12 }}>
             <Paper elevation={2} sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom color="info">
                 Delivery Options

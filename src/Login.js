@@ -13,36 +13,80 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Reset error message
-  
-    // Basic validation
+    setError("");
+
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
-      const response = await axios.post("https://medicine-expiry-8lj5.onrender.com/api/user/login", { email, password });
-      localStorage.setItem("token", response.data.token);
-      alert("Login successful!");
-      navigate("/med"); 
+      const response = await axios.post(
+        "https://medicine-expiry-8lj5.onrender.com/api/auth/login",
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("🚀 Response Data:", response.data);
+
+      const { token, role, user } = response.data;
+
+      if (token && user) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", user.id);
+        localStorage.setItem("role", role);
+      
+        alert("Login successful!");
+      
+        if (role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/med");
+        }
+      }
+      
+
     } catch (err) {
       console.error("Login Error:", err);
-  
-      const errorMessage = err.response && err.response.data && err.response.data.message
-        ? err.response.data.message
-        : "An error occurred during login.";
+      const errorMessage =
+        err.response && err.response.data && err.response.data.message
+          ? err.response.data.message
+          : "An error occurred during login.";
       setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
+  const decodeToken = (token) => {
+    if (!token) return null;
+    try {
+      const payload = token.split('.')[1];
+      return JSON.parse(atob(payload));
+    } catch (e) {
+      console.error("Token decoding error", e);
+      return null;
+    }
+  };
+
+  const token = localStorage.getItem("token");
+  const decodedToken = decodeToken(token);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
+
   return (
     <div>
-      {/* Navbar */}
       <AppBar position="static" sx={{ backgroundColor: "#16a34a" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between", padding: "0 16px" }}>
           <IconButton edge="start" color="inherit" aria-label="logo">
@@ -61,10 +105,9 @@ const Login = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Login Form with Image */}
       <Container sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "103px" }}>
         <Box sx={{ maxWidth: 500, padding: 4, boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", backgroundColor: "white", borderRadius: "8px", marginRight: "20px" }}>
-          <Typography variant="h5" component="h2" textAlign="center" marginBottom={2} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Typography variant="h5" textAlign="center" marginBottom={2} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
             <FaSignInAlt style={{ fontSize: "28px", color: "black", marginRight: "8px" }} />
             Login to MediConnect
           </Typography>
@@ -114,11 +157,10 @@ const Login = () => {
             </Link>
           </Typography>
 
-          {/* Display decoded token details */}
           {decodedToken && (
             <Box sx={{ marginTop: 3 }}>
               <Typography variant="body2" textAlign="center">
-                Logged in as User ID: {decodedToken.userId}
+                Logged in as: {decodedToken.email} ({decodedToken.role})
               </Typography>
               <Button variant="outlined" color="secondary" onClick={handleLogout} fullWidth sx={{ marginTop: 2 }}>
                 Logout
@@ -127,7 +169,12 @@ const Login = () => {
           )}
         </Box>
 
-        <Box component="img" src="https://img.freepik.com/premium-vector/medicine-healthcare-with-online-medical-consultation-doctor-appointment-flat-design_269730-361.jpg" alt="Login Illustration" sx={{ width: 500, height: 400, objectFit: "cover", borderRadius: "8px", margin: "20px" }} />
+        <Box
+          component="img"
+          src="https://img.freepik.com/premium-vector/medicine-healthcare-with-online-medical-consultation-doctor-appointment-flat-design_269730-361.jpg"
+          alt="Login Illustration"
+          sx={{ width: 500, height: 400, objectFit: "cover", borderRadius: "8px", margin: "20px" }}
+        />
       </Container>
     </div>
   );
