@@ -157,16 +157,7 @@ const Login = () => {
             </Link>
           </Typography>
 
-          {decodedToken && (
-            <Box sx={{ marginTop: 3 }}>
-              <Typography variant="body2" textAlign="center">
-                Logged in as: {decodedToken.email} ({decodedToken.role})
-              </Typography>
-              <Button variant="outlined" color="secondary" onClick={handleLogout} fullWidth sx={{ marginTop: 2 }}>
-                Logout
-              </Button>
-            </Box>
-          )}
+      
         </Box>
 
         <Box

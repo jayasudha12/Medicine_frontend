@@ -1,9 +1,30 @@
 import React from "react";
-import { AppBar, Toolbar, IconButton, Typography, Button, TextField, InputAdornment, Container, Grid, Paper } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  TextField,
+  InputAdornment,
+  Container,
+  Grid,
+  Paper,
+  Box
+} from "@mui/material";
 import { FaMedkit, FaSearch, FaDonate, FaShoppingCart, FaBell } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
 const MediConnectPage = () => {
+  const videoUrls = [
+    "https://www.youtube.com/embed/YJ3W0qN5K8Q?si=3eI7HY3gd9WOLbXS",
+    "https://www.youtube.com/embed/8LZJz7GtJA0?si=nbk68t1MCdc29VCw",
+    "https://www.youtube.com/embed/QQuyzOlG3Bk?si=5MIopH6dRa-KsPc7",
+    "https://www.youtube.com/embed/yeCjMIO726s?si=Uofscqbn6xFYHt7K",
+    "https://www.youtube.com/embed/4RMN-C0ezzI?si=T-sqT_XMt4buh2SO",
+    "https://www.youtube.com/embed/_pSiCh8tbEk?si=HeJMJZvTYFjWIosy"
+  ];
+
   return (
     <div style={{
       backgroundImage: "url('https://source.unsplash.com/1600x900/?medical,health')",
@@ -39,26 +60,18 @@ const MediConnectPage = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      
+
       {/* Content Section */}
-      <Container
-        sx={{
-          marginTop: 4,
-          padding: 4,
-          borderRadius: 2,
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
+      <Container sx={{ marginTop: 4, padding: 4, borderRadius: 2, position: "relative", zIndex: 1 }}>
         <Grid container spacing={4} justifyContent="center">
-          {/* Donate Medicine Card */}
+          {/* Donate Medicines */}
           <Grid item xs={12} sm={6} md={4}>
             <Paper elevation={6} sx={{
-              padding: 4, 
-              textAlign: "center", 
-              backgroundColor: "rgba(255, 255, 255, 0.9)", 
-              borderRadius: 2, 
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", 
+              padding: 4,
+              textAlign: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
+              borderRadius: 2,
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               transition: "transform 0.3s ease-in-out",
               '&:hover': { transform: 'scale(1.05)' },
             }}>
@@ -71,18 +84,17 @@ const MediConnectPage = () => {
                 <Button variant="contained" color="primary" startIcon={<FaDonate />} fullWidth>
                   Donate
                 </Button>
-              </Link>  
+              </Link>
             </Paper>
           </Grid>
 
-          {/* Buy Medicine Card */}
+          {/* Buy Medicines */}
           <Grid item xs={12} sm={6} md={4}>
             <Paper elevation={6} sx={{
-              padding: 4, 
-              textAlign: "center", 
-              backgroundColor: "rgba(255, 255, 255, 0.9)", 
-              borderRadius: 2, 
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", 
+              padding: 4,
+              textAlign: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.85)",
+              borderRadius: 2,
               transition: "transform 0.3s ease-in-out",
               '&:hover': { transform: 'scale(1.05)' },
             }}>
@@ -100,72 +112,64 @@ const MediConnectPage = () => {
           </Grid>
         </Grid>
 
-        {/* Videos Section */}
-        <Typography variant="h5" sx={{ marginTop: 6, textAlign: "center", fontWeight: "bold" }}>
-          Health Tips and Videos
-        </Typography>
-        
-        <Grid container spacing={4} justifyContent="center" sx={{ marginTop: 4 }}>
-          {/* Video 1 */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Paper elevation={4} sx={{ padding: 2, borderRadius: 2 }}>
-              <iframe
-                width="100%"
-                height="215"
-                src="https://www.youtube.com/embed/tqwdalGQkzM"
-                title="Health Video 1"
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </Paper>
-          </Grid>
+        <Box
+  sx={{
+    mt: 6,
+    py: 1,
+    px: 2,
+    width: "100%",
+    maxWidth: "1700px",
+    mx: "auto"
+  }}
+>
+  <center>
+  <Typography
+    variant="h5"
+    sx={{
+      mb: 4,
+     
+      fontWeight: "bold",
+      backgroundColor: "whitesmoke", // Light blue background ONLY for heading
+      display: "inline-block",
+      px: 3,
+      py: 1,
+      borderRadius: 2
+    }}
+  >
+    Empowering health through accessible medical education
+    
+  </Typography>
+  </center>
 
-          {/* Video 2 */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Paper elevation={4} sx={{ padding: 2, borderRadius: 2 }}>
-              <iframe
-                width="100%"
-                height="215"
-                src="https://www.youtube.com/embed/PAfUyS6XW8A"
-                title="Health Video 2"
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </Paper>
-          </Grid>
+  <Grid container spacing={4}>
+    {videoUrls.map((videoUrl, index) => (
+      <Grid item xs={12} sm={6} md={4} key={index}>
+        <Paper
+          elevation={4}
+          sx={{
+            p: 3,
+            borderRadius: 3,
+            overflow: "hidden",
+            backgroundColor: "white",
+            transition: "transform 0.3s ease",
+            '&:hover': { transform: 'scale(1.03)' }
+          }}
+        >
+          <iframe
+            width="100%"
+            height="240"
+            src={videoUrl}
+            title={`Health Video ${index + 1}`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </Paper>
+      </Grid>
+    ))}
+  </Grid>
+</Box>
 
-          {/* Video 3 */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Paper elevation={4} sx={{ padding: 2, borderRadius: 2 }}>
-              <iframe
-                width="100%"
-                height="215"
-                src="https://www.youtube.com/embed/aGdDqfNm0Xk"
-                title="Health Video 3"
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </Paper>
-          </Grid>
-
-          {/* Video 4 */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Paper elevation={4} sx={{ padding: 2, borderRadius: 2 }}>
-              <iframe
-                width="100%"
-                height="215"
-                src="https://www.youtube.com/embed/J6k1anOXB4Q"
-                title="Health Video 4"
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </Paper>
-          </Grid>
-        </Grid>
       </Container>
     </div>
   );

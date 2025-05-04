@@ -11,7 +11,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import del from './del.png';
+import del from './del-removebg-preview.png';
 import axios from 'axios';
 
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
@@ -362,7 +362,7 @@ const AddDeliveryAgentForm = () => {
             src={del}
             alt="Delivery Illustration"
             sx={{
-              width: '500%',
+              width: '300%',
               maxWidth: 600,
               height: 'auto',
               objectFit: 'contain',
