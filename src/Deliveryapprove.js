@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Admin from "./Admin";
 import axios from "axios";
 import {
   Box,
@@ -14,7 +15,6 @@ const DeliveryApprove = () => {
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
-  // Fetch delivery agent applications
   const fetchApplications = async () => {
     setLoading(true);
     try {
@@ -34,7 +34,6 @@ const DeliveryApprove = () => {
     }
   };
 
-  // Approve a delivery agent application
   const handleApprove = async (id) => {
     try {
       await axios.post(
@@ -47,13 +46,12 @@ const DeliveryApprove = () => {
         }
       );
       alert("Delivery agent application approved.");
-      fetchApplications(); // Refresh the list
+      fetchApplications();
     } catch (error) {
       console.error("Approval failed:", error);
     }
   };
 
-  // Reject a delivery agent application
   const handleReject = async (id) => {
     try {
       await axios.post(
@@ -66,56 +64,58 @@ const DeliveryApprove = () => {
         }
       );
       alert("Delivery agent application rejected.");
-      fetchApplications(); // Refresh the list
+      fetchApplications();
     } catch (error) {
       console.error("Rejection failed:", error);
     }
   };
 
-  // Fetch applications on component mount
   useEffect(() => {
     fetchApplications();
   }, []);
 
   return (
-    <Container sx={{ marginTop: 4 }}>
-      <Typography variant="h5" gutterBottom>
-        Delivery Agent Applications
-      </Typography>
+    <>
+      <Admin /> {/* Make sure this fills width inside the component */}
+      <Container sx={{ marginTop: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Delivery Agent Applications
+        </Typography>
 
-      {loading ? (
-        <CircularProgress />
-      ) : applications.length === 0 ? (
-        <Typography>No pending delivery agent applications.</Typography>
-      ) : (
-        applications.map((application) => (
-          <Paper key={application._id} sx={{ padding: 2, marginBottom: 2 }}>
-            <Typography><strong>Name:</strong> {application.name}</Typography>
-            <Typography><strong>Email:</strong> {application.email}</Typography>
-            <Typography><strong>Phone:</strong> {application.phone}</Typography>
-            <Typography><strong>Address:</strong> {application.address}</Typography>
+        {loading ? (
+          <CircularProgress />
+        ) : applications.length === 0 ? (
+          <Typography>No pending delivery agent applications.</Typography>
+        ) : (
+          applications.map((application) => (
+            <Paper key={application._id} sx={{ padding: 2, marginBottom: 2 }}>
+              <Typography><strong>Name:</strong> {application.fullName}</Typography>
+              <Typography><strong>Email:</strong> {application.email}</Typography>
+              <Typography><strong>Phone:</strong> {application.phone}</Typography>
+              <Typography><strong>Address:</strong> {application.address}</Typography>
 
-            <Box sx={{ marginTop: 1 }}>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => handleApprove(application._id)}
-                sx={{ marginRight: 1 }}
-              >
-                Approve
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => handleReject(application._id)}
-              >
-                Reject
-              </Button>
-            </Box>
-          </Paper>
-        ))
-      )}
-    </Container>
+              <Box sx={{ marginTop: 1 }}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={() => handleApprove(application._id)}
+                  sx={{ marginRight: 1 }}
+                >
+                  Approve
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => handleReject(application._id)}
+                >
+                  Reject
+                </Button>
+              </Box>
+            </Paper>
+          ))
+        )}
+      </Container>
+    </>
   );
 };
 

@@ -17,6 +17,7 @@ import MedApproval from "./Medapproval";
 import AdminAssignOrder from "./Adminassign";
 import AddDeliveryAgentForm from "./DeliveryAgentform";
 import CartPage from "./Getcart";
+import DeliveryDashboard from "./delivery";
 const App = () => {
   return (
     <Router>
@@ -42,6 +43,8 @@ const App = () => {
         <Route path="/admin-assign-order" element={<AdminAssignOrder />} />
 
         <Route path="/delivery-form" element={<AddDeliveryAgentForm />} />
+
+        <Route path="/delivery-dash" element={<DeliveryDashboard />} />
 
 
         <Route path="/category" element={<CategoryPage/>} />

@@ -6,7 +6,7 @@ const Admin = () => {
   return (
     <>
       {/* Navigation Bar */}
-      <AppBar position="static" sx={{ backgroundColor: "#2563eb" }}>
+      <AppBar position="static" sx={{ backgroundColor: "#2e7d32" }}>
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Admin Dashboard
@@ -23,22 +23,12 @@ const Admin = () => {
           </Button>
           {/* New Links for Managing Orders */}
           <Button color="inherit">
-            <Link to="/admin-orders" style={{ color: "white", textDecoration: "none" }}>
-              Orders
-            </Link>
-          </Button>
-          <Button color="inherit">
             <Link to="/admin-assign-order" style={{ color: "white", textDecoration: "none" }}>
               Assign Orders
             </Link>
           </Button>
         </Toolbar>
       </AppBar>
-
-      {/* Main Content */}
-      <Container sx={{ marginTop: 4 }}>
-        <Typography variant="h5">Welcome to Admin Dashboard</Typography>
-      </Container>
     </>
   );
 };
