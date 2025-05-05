@@ -20,42 +20,96 @@ const AdminAssignOrder = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token"); // Ensure token is stored at login
+  // Fetch token from localStorage
+  const token = localStorage.getItem("token");
 
-  // Fetch pending orders on mount
+  // Redirect if no token is found (for unauthorized users)
+useEffect(() => {
+  const fetchData = async () => {
+    if (!token) return; // Don't make API call if token is not available
+
+    try {
+      const ordersResponse = await axios.get(
+        "https://medicine-expiry-8lj5.onrender.com/api/admin/orders/pending",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      console.log("Fetched orders:", ordersResponse.data); // Add this line to inspect the data
+      setOrders(ordersResponse.data);
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+      if (err.response && err.response.status === 401) {
+        setError("Invalid or expired token. Please log in again.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        setError("Failed to fetch orders. Make sure you're logged in as admin.");
+      }
+    }
+  };
+
+  fetchData();
+}, [token, navigate]);
+
+
+  // Fetch pending orders on component mount
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchData = async () => {
+      if (!token) return; // Don't make API call if token is not available
+
       try {
-        const response = await axios.get("/api/admin/orders/pending", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setOrders(response.data);
+        const ordersResponse = await axios.get(
+          "https://medicine-expiry-8lj5.onrender.com/api/admin/orders/pending",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setOrders(ordersResponse.data);
       } catch (err) {
-        console.error("Failed to fetch pending orders", err);
-        setError("Failed to fetch orders.");
+        console.error("Error fetching orders:", err);
+        if (err.response && err.response.status === 401) {
+          setError("Invalid or expired token. Please log in again.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          setError("Failed to fetch orders. Make sure you're logged in as admin.");
+        }
       }
     };
-    fetchOrders();
-  }, [token]);
+
+    fetchData();
+  }, [token, navigate]);
 
   // Fetch available agents when an order is selected
   useEffect(() => {
     const fetchAgents = async () => {
-      if (!selectedOrder) return;
+      if (!selectedOrder || !token) return;
+
       try {
-        const response = await axios.get(`/api/admin/available-agents/${selectedOrder}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setAvailableAgents(response.data);
+        const agentsResponse = await axios.get(
+          `https://medicine-expiry-8lj5.onrender.com/api/admin/available-agents/${selectedOrder}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAvailableAgents(agentsResponse.data);
       } catch (err) {
-        console.error("Failed to fetch available agents", err);
-        setError("Failed to fetch delivery agents.");
+        console.error("Error fetching agents:", err);
+        setError("Failed to fetch available delivery agents.");
       }
     };
+
     fetchAgents();
   }, [selectedOrder, token]);
 
-  // Handle assignment
   const handleAssignOrder = async () => {
     if (!selectedOrder || !selectedAgent) {
       setError("Please select both an order and a delivery agent.");
@@ -63,11 +117,14 @@ const AdminAssignOrder = () => {
     }
 
     try {
+      // Send PUT request to backend with the order ID and selected agent ID
       const response = await axios.put(
-        `/api/admin/orders/assign/${selectedOrder}`,
+        `https://medicine-expiry-8lj5.onrender.com/api/admin/orders/assign/${selectedOrder}`,
         { deliveryAgentId: selectedAgent },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -76,8 +133,8 @@ const AdminAssignOrder = () => {
         navigate("/admin-orders");
       }
     } catch (err) {
-      console.error("Assignment failed", err);
-      setError("Failed to assign the order.");
+      console.error("Error assigning order:", err);
+      setError("Failed to assign the order. Please try again.");
     }
   };
 
@@ -87,39 +144,43 @@ const AdminAssignOrder = () => {
         Assign Delivery Agent to Order
       </Typography>
 
+      {/* Display errors */}
       {error && (
-        <Typography color="error" sx={{ mb: 2 }}>
+        <Typography color="error" sx={{ marginBottom: 2 }}>
           {error}
         </Typography>
       )}
 
       {/* Select Order */}
-      <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel id="order-label">Select Order</InputLabel>
+      <FormControl fullWidth sx={{ marginBottom: 2 }}>
+        <InputLabel id="select-order-label">Select Order</InputLabel>
         <Select
-          labelId="order-label"
-          value={selectedOrder}
-          onChange={(e) => {
-            setSelectedOrder(e.target.value);
-            setSelectedAgent(""); // Reset agent when order changes
-          }}
-        >
-          {orders.map((order) => (
-            <MenuItem key={order._id} value={order._id}>
-              #{order._id} - {order?.medicineId?.name || "Unknown"} (User: {order?.userId?.email || "N/A"})
-            </MenuItem>
-          ))}
-        </Select>
-        <FormHelperText>Choose a pending order</FormHelperText>
+  labelId="select-order-label"
+  value={selectedOrder}
+  onChange={(e) => {
+    setSelectedOrder(e.target.value);
+    setSelectedAgent(""); // Reset agent when order changes
+    setAvailableAgents([]); // Clear agents until refetch
+  }}
+>
+  {orders.map((order) => (
+    <MenuItem key={order._id} value={order._id}>
+      {order.items?.[0]?.medicineName || "Unnamed Medicine"} — {order.userId?.email || "Unknown User"}
+    </MenuItem>
+  ))}
+</Select>
+
+        <FormHelperText>Select an order to assign a delivery agent</FormHelperText>
       </FormControl>
 
-      {/* Select Agent */}
-      <FormControl fullWidth sx={{ mb: 2 }} disabled={!selectedOrder}>
-        <InputLabel id="agent-label">Select Delivery Agent</InputLabel>
+      {/* Select Delivery Agent */}
+      <FormControl fullWidth sx={{ marginBottom: 2 }}>
+        <InputLabel id="select-agent-label">Select Delivery Agent</InputLabel>
         <Select
-          labelId="agent-label"
+          labelId="select-agent-label"
           value={selectedAgent}
           onChange={(e) => setSelectedAgent(e.target.value)}
+          disabled={!availableAgents.length}
         >
           {availableAgents.map((agent) => (
             <MenuItem key={agent._id} value={agent._id}>
@@ -127,10 +188,16 @@ const AdminAssignOrder = () => {
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText>Choose an agent for the selected order</FormHelperText>
+        <FormHelperText>Select a delivery agent to assign</FormHelperText>
       </FormControl>
 
-      <Button variant="contained" onClick={handleAssignOrder} disabled={!selectedOrder || !selectedAgent}>
+      {/* Assign Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleAssignOrder}
+        disabled={!selectedOrder || !selectedAgent}
+      >
         Assign Order
       </Button>
     </Container>

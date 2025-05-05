@@ -90,7 +90,7 @@ const DeliveryApprove = () => {
       ) : (
         applications.map((application) => (
           <Paper key={application._id} sx={{ padding: 2, marginBottom: 2 }}>
-            <Typography><strong>Name:</strong> {application.name}</Typography>
+            <Typography><strong>Name:</strong> {application.fullName}</Typography>
             <Typography><strong>Email:</strong> {application.email}</Typography>
             <Typography><strong>Phone:</strong> {application.phone}</Typography>
             <Typography><strong>Address:</strong> {application.address}</Typography>
