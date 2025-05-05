@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Admin from "./Admin";
 import axios from "axios";
 import {
   Box,
@@ -94,6 +95,8 @@ const MedApproval = () => {
   }, []);
 
   return (
+    <>
+    <Admin/>
     <Container sx={{ marginTop: 4 }}>
       <Typography variant="h5" gutterBottom>
         Medicines Pending Approval
@@ -154,6 +157,7 @@ const MedApproval = () => {
         ))
       )}
     </Container>
+    </>
   );
 };
 
