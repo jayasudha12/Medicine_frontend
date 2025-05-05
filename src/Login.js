@@ -46,9 +46,12 @@ const Login = () => {
       
         if (role === "admin") {
           navigate("/admin");
+        } else if (role === "deliveryAgent") {
+          navigate("/delivery-dash");
         } else {
           navigate("/med");
         }
+        
       }
       
 
