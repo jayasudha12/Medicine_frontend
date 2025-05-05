@@ -11,7 +11,7 @@ import CategoryPage from "./Category";
 import CategoryMedicines from "./Cat";
 import AboutUs from "./Aboutus";
 import Admin from "./Admin";
-
+import OrderHistoryPage from "./getorder";
 import DeliveryApprove from "./Deliveryapprove";
 import MedApproval from "./Medapproval";
 import AdminAssignOrder from "./Adminassign";
@@ -34,6 +34,7 @@ const App = () => {
         <Route path="/cat/:category" element={<CategoryMedicines />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/order-history" element={<OrderHistoryPage />} />
 
         <Route path="/admin-med" element={<MedApproval />} />
         <Route path="/admin-delivery" element={<DeliveryApprove />} />
