@@ -1,15 +1,55 @@
-import { useState } from "react";
-import { Button, IconButton, Drawer } from "@mui/material";
-import { Menu } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { FaGooglePlay, FaApple, FaTwitter, FaHeadset } from "react-icons/fa"; // Removed unused FaSearch, FaDonate, FaShoppingCart, FaBell
+import Register from "./Register";
+import { Link } from 'react-router-dom';
+import Login from "./Login";
+import Buy from "./Buy";
+import Medicine from "./Medicine";
+import MediConnectPage from "./Med";
+import CategoryPage from "./Category";
+import CategoryMedicines from "./Cat";
+import AboutUs from "./Aboutus";
+import Admin from "./Admin";
+import OrderHistoryPage from "./getorder";
+import DeliveryApprove from "./Deliveryapprove";
+import MedApproval from "./Medapproval";
+import AdminAssignOrder from "./Adminassign";
+import AddDeliveryAgentForm from "./DeliveryAgentform";
+import CartPage from "./Getcart";
+import DeliveryDashboard from "./delivery";
+import AcceptedOrder from "./delacceptedorder";
+import ConfirmDelivery from "./confirmdelivery";
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<MedicalAppUI />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/medicine" element={<Medicine />} />
+        <Route path="/med" element={<MediConnectPage />} />
+        <Route path="/buy" element={<Buy />} />
+        <Route path="/cat/:category" element={<CategoryMedicines />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/order-history" element={<OrderHistoryPage />} />
+        <Route path="/admin-med" element={<MedApproval />} />
+        <Route path="/admin-delivery" element={<DeliveryApprove />} />
+        <Route path="/admin-assign-order" element={<AdminAssignOrder />} />
+        <Route path="/delivery-form" element={<AddDeliveryAgentForm />} />
+        <Route path="/delivery-dash" element={<DeliveryDashboard />} />
+        <Route path="/del-accepted" element={<AcceptedOrder />} />
+        <Route path="/confirm-delivery/:orderId" element={<ConfirmDelivery />} />
+        <Route path="/category" element={<CategoryPage />} />
+      </Routes>
+    </Router>
+  );
+};
 
 function MedicalAppUI() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
   return (
     <div style={{ fontFamily: "sans-serif" }}>
       {/* Navbar */}
@@ -26,80 +66,24 @@ function MedicalAppUI() {
         <h1 style={{ fontSize: "24px", fontWeight: "bold", color: "#16a34a" }} aria-label="MediConnect">
           Medi<span style={{ color: "#333" }}>Connect</span>
         </h1>
-
-        {/* Mobile Drawer Icon */}
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          onClick={handleDrawerToggle}
-          sx={{ display: { xs: "block", md: "none" } }}
-        >
-          <Menu />
-        </IconButton>
-
-        {/* Drawer for Mobile Navigation */}
-        <Drawer
-          anchor="right"
-          open={drawerOpen}
-          onClose={handleDrawerToggle}
-          sx={{ display: { xs: "block", md: "none" } }}
-        >
-          <div style={{ width: 250, padding: "16px" }}>
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              {["Home", "Services", "Connect", "AboutUs", "Contact"].map((item) => (
-                <li key={item} style={{ padding: "12px 0", fontWeight: "500" }}>
-                  <Link to={`/${item.toLowerCase()}`} style={{ textDecoration: "none", color: "inherit" }}>
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Drawer>
-
-        {/* Desktop Navigation */}
-        <ul
-          style={{
-            display: "flex",
-            gap: "24px",
-            color: "#333",
-            listStyle: "none",
-            fontSize: "18px",
-            display: { xs: "none", md: "flex" },
-          }}
-        >
+        <ul style={{ display: "flex", gap: "24px", color: "#333", listStyle: "none", fontSize: "18px" }}>
           {["Home", "Services", "Connect", "AboutUs", "Contact"].map((item) => (
             <li key={item} style={{ cursor: "pointer", fontWeight: "500" }}>
-              <Link to={`/${item.toLowerCase()}`} style={{ textDecoration: "none", color: "inherit" }}>
-                {item}
-              </Link>
+              {item}
             </li>
           ))}
         </ul>
-
-        {/* Buttons */}
         <div style={{ display: "flex", gap: "16px" }}>
-          <Button variant="outlined">
-            <Link to="/login" style={{ textDecoration: "none", color: "inherit" }}>
-              Log In
-            </Link>
+          <Button variant="outline">
+            <Link to="/login" style={{ textDecoration: "none", color: "inherit" }}>Log In</Link>
           </Button>
 
-          <Button
-            style={{ backgroundColor: "#16a34a", color: "white", padding: "8px 16px", borderRadius: "8px" }}
-          >
-            <Link to="/register" style={{ textDecoration: "none", color: "inherit" }}>
-              Sign Up
-            </Link>
+          <Button style={{ backgroundColor: "#16a34a", color: "white", padding: "8px 16px", borderRadius: "8px" }}>
+            <Link to="/register" style={{ textDecoration: "none", color: "inherit" }}>Sign Up</Link>
           </Button>
 
-          <Button
-            style={{ backgroundColor: "#16a34a", color: "white", padding: "8px 16px", borderRadius: "8px" }}
-          >
-            <Link to="/delivery-form" style={{ textDecoration: "none", color: "inherit" }}>
-              Delivery-agent form
-            </Link>
+          <Button style={{ backgroundColor: "#16a34a", color: "white", padding: "8px 16px", borderRadius: "8px" }}>
+            <Link to="/delivery-form" style={{ textDecoration: "none", color: "inherit" }}>Delivery-agent form</Link>
           </Button>
         </div>
       </nav>
@@ -114,9 +98,8 @@ function MedicalAppUI() {
           backgroundColor: "#e5e7eb",
         }}
       >
-        {/* Text Section */}
         <div style={{ maxWidth: "680px", minHeight: "200px", height: "auto" }}>
-          <h2 style={{ fontSize: "40px", fontWeight: "bold", color: "#111" }}>
+          <h2 style={{ fontSize: "40px", fontWeight: "bold", color: "#111" }} aria-label="Stay on Top of Your Medicine">
             Stay on Top of Your Medicine with <span style={{ color: "#16a34a" }}>Medicine Exchange Services</span>
           </h2>
           <p style={{ color: "#555", marginTop: "16px" }}>
@@ -149,8 +132,6 @@ function MedicalAppUI() {
             </Button>
           </div>
         </div>
-
-        {/* Image Section */}
         <div style={{ position: "relative" }}>
           <img
             src="https://media.istockphoto.com/id/1455018058/photo/woman-at-pharmacy-shopping-for-medicine.jpg?s=612x612&w=0&k=20&c=lVWJzQ8BKiTpa0xjWHzWzYsGz8L1bBAEL1wtXYegRzc="
