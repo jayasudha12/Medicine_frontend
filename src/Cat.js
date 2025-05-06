@@ -1,6 +1,6 @@
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -25,107 +25,87 @@ import {
 } from '@mui/material';
 import { Search, ShoppingCart } from '@mui/icons-material';
 import { FaMedkit } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; 
-
-// Map slugs to human-readable category names
-const slugToCategoryName = {
-  "prescription-medicines": "Prescription Medicine",
-  "otc-medicines": "OTC Medicine",
-  "emergency-medicines": "Emergency Medicine",
-  "elderly-medicines": "Elderly medicine",
-  "others": "Other"
-};
 
 const fallbackImage = "https://via.placeholder.com/300x200?text=No+Image";
 
+const categoryMap = {
+  "prescription-medicine": "Prescription Medicine",
+  "otc-medicine": "OTC medicine",
+  "emergency-medicine": "Emergency Medicine",
+  "elderly-medicine": "Elderly medicine",
+  "others": "Other",
+};
+
 const CategoryMedicines = () => {
-  const { category: categorySlug } = useParams(); // Get category from URL
+  const { category } = useParams();
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [selectedMedicine, setSelectedMedicine] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [cartMessage, setCartMessage] = useState('');
+  const [cartMessage, setCartMessage] = useState("");
 
-  const userId = localStorage.getItem('userId'); // Get userId from localStorage
-  const token = localStorage.getItem('token'); // Get token from localStorage
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
-  const categoryName = slugToCategoryName[categorySlug]; // Get category name based on the slug
+  const categoryName = categoryMap[category] || category;
 
   useEffect(() => {
-    if (!categoryName) {
-      setError("Invalid category specified.");
-      setLoading(false);
-      return;
-    }
-
-    // Fetch approved medicines for the category
     const fetchMedicines = async () => {
-      setLoading(true);
       try {
+        setLoading(true);
         const res = await axios.get(
-          `https://medicine-expiry-8lj5.onrender.com/api/medicine/categoryMedicine?category=${encodeURIComponent(categoryName)}&userIdToExclude=${userId}`, // Ensure this matches your backend API route
+          `https://medicine-expiry-8lj5.onrender.com/api/medicine/categoryMedicine?category=${encodeURIComponent(categoryName)}&userIdToExclude=${userId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
         setMedicines(res.data);
-      } catch (err) {
-        console.error('Error fetching medicines:', err.response?.data || err.message);
-        setError("Failed to load medicines. Please try again later.");
+      } catch (error) {
+        console.error("Failed to fetch medicines:", error);
+        setError("Failed to load medicines.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchMedicines();
-  }, [categoryName, userId, token]);
+  }, [category, userId]);
 
-  // Open the dialog to view medicine details
   const handleViewDetails = (medicine) => {
     setSelectedMedicine(medicine);
     setOpenDialog(true);
   };
 
-  // Close the dialog
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedMedicine(null);
   };
-  const navigate = useNavigate(); // Initialize navigate function
 
-const handleCartClick = () => {
-  // Navigate to the cart page when the icon is clicked
-  navigate('/cart');
-};
-  // Handle adding medicine to the cart
   const handleAddToCart = async (medicine) => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     try {
-      // Make the API request to add medicine to the cart
       const response = await axios.put(
-        'https://medicine-expiry-8lj5.onrender.com/api/medicine/addToCart', // Backend API for adding to cart
+        'https://medicine-expiry-8lj5.onrender.com/api/medicine/addToCart',
         {
-          userId: userId,
-          medicineId: medicine._id, // Sending the medicine's ID
+          userId,
+          medicineId: medicine._id,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       if (response.status === 201) {
-        cart.push(medicine); // Update the cart locally
-        localStorage.setItem('cart', JSON.stringify(cart)); // Save the updated cart
-        setCartMessage(`${medicine.name} added to cart!`); // Provide success feedback
+        cart.push(medicine);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        setCartMessage(`${medicine.name} added to cart!`);
+        setTimeout(() => setCartMessage(""), 3000);
       }
-    } catch (error) {
-      console.error("Error adding to cart:", error);
+    } catch (err) {
+      console.error("Error adding to cart:", err);
       setCartMessage("Failed to add to cart. Please try again.");
     }
   };
@@ -146,9 +126,9 @@ const handleCartClick = () => {
               <Search sx={{ color: "#888", mr: 0 }} />
               <InputBase placeholder="Search..." sx={{ fontSize: 14 }} />
             </Box>
-            <IconButton sx={{ color: "#fff" }} onClick={handleCartClick}>
-    <ShoppingCart />
-  </IconButton>
+            <IconButton sx={{ color: "#fff" }} onClick={() => navigate('/cart')}>
+              <ShoppingCart />
+            </IconButton>
             <Avatar sx={{ width: 40, height: 40, cursor: "pointer" }} src="https://cepi-sa.com/wp-content/uploads/2024/08/people-icon-design-avatar-icon-person-icons-people-icons-are-set-in-trendy-flat-style-user-icon-set-vector.jpg" />
           </Box>
         </Toolbar>
@@ -178,16 +158,14 @@ const handleCartClick = () => {
             {medicines.map((med) => (
               <Grid item xs={12} sm={6} md={4} key={med._id}>
                 <Card sx={{ height: "100%", display: "flex", flexDirection: "column", borderRadius: 2, boxShadow: 3, ":hover": { boxShadow: 6 } }}>
-                  <CardMedia
-                    component="img"
-                    height="180"
-                    image={med.imageUrl || fallbackImage}
-                    alt={med.name}
-                    sx={{ objectFit: "cover", borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-                    onError={(e) => {
-                      e.target.src = fallbackImage;
-                    }}
-                  />
+                <CardMedia
+  component="img"
+  height="180"
+  image={med.imageUrl} // use only the actual image URL
+  alt={med.name}
+  sx={{ objectFit: "cover", borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
+/>
+
                   <CardContent>
                     <Typography variant="h6" fontWeight="bold" gutterBottom>
                       {med.name}
@@ -211,14 +189,14 @@ const handleCartClick = () => {
         )}
       </Container>
 
-      {/* Cart Message */}
+      {/* Snackbar-style Cart Message */}
       {cartMessage && (
         <Box sx={{ position: 'fixed', bottom: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 1000 }}>
           <Alert severity="success">{cartMessage}</Alert>
         </Box>
       )}
 
-      {/* Enhanced Dialog for Medicine Details */}
+      {/* Dialog for Medicine Details */}
       {selectedMedicine && (
         <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
           <DialogTitle sx={{ fontWeight: 'bold', fontSize: 20 }}>
@@ -226,17 +204,15 @@ const handleCartClick = () => {
           </DialogTitle>
           <DialogContent sx={{ paddingTop: 2 }}>
             <Grid container spacing={2}>
-              {/* Medicine Image */}
               <Grid item xs={12} md={4}>
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                   <img
-                    src={selectedMedicine.imageUrl || fallbackImage}
+                    src={selectedMedicine.image || fallbackImage}
                     alt={selectedMedicine.name}
                     style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px' }}
                   />
                 </Box>
               </Grid>
-              {/* Medicine Information */}
               <Grid item xs={12} md={8}>
                 <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
                   {selectedMedicine.name}

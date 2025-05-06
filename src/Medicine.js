@@ -257,7 +257,7 @@ const MedicineManagement = () => {
               <option value="Prescription Medicine">Prescription Medicines</option>
               <option value="OTC Medicine">OTC Medicines</option>
               <option value="Emergency Medicine">Emergency Medicines</option>
-              <option value="Elderly medicinee">Elderly Medicines</option>
+              <option value="Elderly medicine">Elderly Medicines</option>
               <option value="Other">Others</option>
             </select>
           </div>
