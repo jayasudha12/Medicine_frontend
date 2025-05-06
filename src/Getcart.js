@@ -107,6 +107,8 @@ const CartPage = () => {
     }
   };
 
+  const handleCloseSuccessDialog = () => setSuccessDialogOpen(false);
+
   return (
     <Box sx={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
       {/* AppBar */}
@@ -193,26 +195,25 @@ const CartPage = () => {
             <Divider sx={{ my: 4 }} />
 
             <Box sx={{ textAlign: "center", mt: 3, display: "flex", justifyContent: "center", gap: 2 }}>
-  <Button
-    variant="contained"
-    size="large"
-    onClick={handleOpenOrderDialog}
-    sx={{ backgroundColor: "#388e3c", px: 5, py: 1.5 }}
-  >
-    Proceed to Order
-  </Button>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleOpenOrderDialog}
+                sx={{ backgroundColor: "#388e3c", px: 5, py: 1.5 }}
+              >
+                Proceed to Order
+              </Button>
 
-  <Button
-    variant="outlined"
-    size="large"
-    component={Link}
-    to="/order-history"
-    sx={{ borderColor: "#1976d2", color: "#1976d2", px: 4, py: 1.5 }}
-  >
-    View Order History
-  </Button>
-</Box>
-
+              <Button
+                variant="outlined"
+                size="large"
+                component={Link}
+                to="/order-history"
+                sx={{ borderColor: "#1976d2", color: "#1976d2", px: 4, py: 1.5 }}
+              >
+                View Order History
+              </Button>
+            </Box>
           </>
         )}
       </Container>
@@ -245,21 +246,17 @@ const CartPage = () => {
             onClick={handlePlaceOrder}
             variant="contained"
             disabled={isSubmitting}
-            sx={{ backgroundColor: "#388e3c" }}
           >
-            {isSubmitting ? "Placing..." : "Place Order"}
+            {isSubmitting ? "Placing Order..." : "Place Order"}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Success Dialog */}
-      <Dialog open={successDialogOpen} onClose={() => setSuccessDialogOpen(false)}>
-        <DialogTitle>Order Successful</DialogTitle>
-        <DialogContent>
-          <Typography>Your order has been placed successfully!</Typography>
-        </DialogContent>
+      <Dialog open={successDialogOpen} onClose={handleCloseSuccessDialog}>
+        <DialogTitle>Order Placed Successfully!</DialogTitle>
         <DialogActions>
-          <Button onClick={() => setSuccessDialogOpen(false)} autoFocus>
+          <Button onClick={handleCloseSuccessDialog} autoFocus>
             OK
           </Button>
         </DialogActions>

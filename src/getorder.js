@@ -12,8 +12,7 @@ const OrderHistoryPage = () => {
 
   // Retrieve token and userId from localStorage
   const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user'));
-  const userId = user?._id;
+  const userId = localStorage.getItem("userId");
   console.log('User ID:', userId);
 
   const navigate = useNavigate();  // Initialize navigate
