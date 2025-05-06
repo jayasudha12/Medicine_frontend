@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Container, Grid, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TextField } from "@mui/material";
 
@@ -13,14 +13,14 @@ const Buy = () => {
     email: "",
   });
 
-  useEffect(() => {
-    fetchMedicines();
-  }, []);
-
   const token = localStorage.getItem("token"); // Get token from localStorage
 
   // Fetch medicine details
-  const fetchMedicines = async () => {
+  const fetchMedicines = useCallback(async () => {
+    if (!token) {
+      alert("You must be logged in to view medicines.");
+      return;
+    }
     try {
       const response = await axios.get("https://medicine-expiry-8lj5.onrender.com/api/medicine/getAll", {
         headers: { Authorization: `Bearer ${token}` }, // Ensure token is added
@@ -29,7 +29,7 @@ const Buy = () => {
     } catch (error) {
       console.error("Error fetching medicines", error.response?.data || error.message);
     }
-  };
+  }, [token]);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -39,6 +39,12 @@ const Buy = () => {
   // Handle order submission
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
+
+    if (!selectedMedicine || !formData.name || !formData.quantity || !formData.phoneNo || !formData.address || !formData.email) {
+      alert("Please fill out all fields and select a medicine.");
+      return;
+    }
+
     try {
       await axios.post(
         `https://medicine-expiry-8lj5.onrender.com/api/order/${selectedMedicine._id}`,
@@ -54,6 +60,10 @@ const Buy = () => {
       console.error("Error placing order", error.response?.data || error.message);
     }
   };
+
+  useEffect(() => {
+    fetchMedicines();
+  }, [fetchMedicines]); // Ensure fetchMedicines is called on component mount
 
   return (
     <Container>
