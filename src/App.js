@@ -1,8 +1,8 @@
+import React from "react";
 import { Button } from "@mui/material";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { FaGooglePlay, FaApple, FaTwitter, FaHeadset } from "react-icons/fa"; // Removed unused FaSearch, FaDonate, FaShoppingCart, FaBell
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"; // Moved Link here
+import { FaGooglePlay, FaApple, FaTwitter, FaHeadset } from "react-icons/fa";
 import Register from "./Register";
-import { Link } from 'react-router-dom';
 import Login from "./Login";
 import Buy from "./Buy";
 import Medicine from "./Medicine";
@@ -69,12 +69,14 @@ function MedicalAppUI() {
         <ul style={{ display: "flex", gap: "24px", color: "#333", listStyle: "none", fontSize: "18px" }}>
           {["Home", "Services", "Connect", "AboutUs", "Contact"].map((item) => (
             <li key={item} style={{ cursor: "pointer", fontWeight: "500" }}>
-              {item}
+              <Link to={`/${item.toLowerCase()}`} style={{ textDecoration: "none", color: "inherit" }}>
+                {item}
+              </Link>
             </li>
           ))}
         </ul>
         <div style={{ display: "flex", gap: "16px" }}>
-          <Button variant="outline">
+          <Button variant="outlined">
             <Link to="/login" style={{ textDecoration: "none", color: "inherit" }}>Log In</Link>
           </Button>
 

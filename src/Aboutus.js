@@ -15,15 +15,16 @@ export default function AboutUs() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [Slide1, Slide2, Slide3];
 
+  // Function to go to the next slide
   const goToNextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
+  // Effect to change slides every 3 seconds
   useEffect(() => {
-    const interval = setInterval(goToNextSlide, 3000); 
-    return () => clearInterval(interval); 
-  }, [goToNextSlide]);  // Include goToNextSlide as a dependency
-  
+    const interval = setInterval(goToNextSlide, 3000);
+    return () => clearInterval(interval);
+  }, []); // Empty dependency array means this effect only runs once
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#f3f4f6", padding: 3 }}>
@@ -57,7 +58,7 @@ export default function AboutUs() {
         sx={{
           position: "relative",
           overflow: "hidden",
-          width: "80%", 
+          width: "80%",
           height: "500px",
           borderRadius: 2,
           margin: "auto",
@@ -71,7 +72,7 @@ export default function AboutUs() {
           sx={{
             width: "100%",
             height: "100%",
-            objectFit: "fill", 
+            objectFit: "fill",
             borderRadius: 2,
           }}
         />
@@ -81,7 +82,7 @@ export default function AboutUs() {
       <Grid 
         container 
         spacing={4} 
-        sx={{ marginTop: 4, justifyContent: "center", flexDirection: "row" }} // Ensure row layout
+        sx={{ marginTop: 4, justifyContent: "center", flexDirection: "row" }} 
       >
         <Grid item xs={5} sm={4}>
           <Box sx={{ textAlign: "center", backgroundColor: "#ffffff", padding: 3, borderRadius: 2 }}>
@@ -92,8 +93,7 @@ export default function AboutUs() {
               Fast and Reliable Service
             </Typography>
             <Typography color="textSecondary" sx={{ mt: 1 }}>
-              It delivers essential medicines and healthcare products 
-              <br></br>swiftly, ensuring that you never have to wait.
+              It delivers essential medicines and healthcare products swiftly, ensuring that you never have to wait.
             </Typography>
           </Box>
         </Grid>
@@ -106,8 +106,7 @@ export default function AboutUs() {
               Secure and Confidential
             </Typography>
             <Typography color="textSecondary" sx={{ mt: 1 }}>
-              Your personal data are securely stored, ensuring 
-              <br></br>confidentiality  for every customer.
+              Your personal data are securely stored, ensuring confidentiality for every customer.
             </Typography>
           </Box>
         </Grid>
@@ -120,8 +119,7 @@ export default function AboutUs() {
               Easy Integration
             </Typography>
             <Typography color="textSecondary" sx={{ mt: 1 }}>
-              Our platform integrates easily with pharmacies 
-              <br></br>and health systems to ensure a seamless experience.
+              Our platform integrates easily with pharmacies and health systems to ensure a seamless experience.
             </Typography>
           </Box>
         </Grid>
@@ -129,7 +127,7 @@ export default function AboutUs() {
 
       <Box sx={{ marginTop: 6, textAlign: "center" }}>
         <Typography variant="h5" color={blue[700]} fontWeight="bold">
-         What do people say?
+          What do people say?
         </Typography>
         <Grid container spacing={4} sx={{ marginTop: 3, justifyContent: "center" }}>
           <Grid item xs={12} sm={4}>
@@ -148,7 +146,7 @@ export default function AboutUs() {
                 Emily Smith
               </Typography>
               <Typography color="textSecondary" sx={{ mt: 1 }}>
-                "The service is quick, reliable, and makes my life easier. "
+                "The service is quick, reliable, and makes my life easier."
               </Typography>
             </Box>
           </Grid>
