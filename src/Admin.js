@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, Button, Typography, Container } from "@mui/material";
+import { AppBar, Toolbar, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Admin = () => {

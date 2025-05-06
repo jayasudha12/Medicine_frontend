@@ -22,7 +22,8 @@ export default function AboutUs() {
   useEffect(() => {
     const interval = setInterval(goToNextSlide, 3000); 
     return () => clearInterval(interval); 
-  }, []);
+  }, [goToNextSlide]);  // Include goToNextSlide as a dependency
+  
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#f3f4f6", padding: 3 }}>

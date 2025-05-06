@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Button, TextField, Typography, Box, AppBar, Toolbar, IconButton, Container } from "@mui/material";
-import { FaUser, FaEnvelope, FaLock,FaQuoteLeft,FaQuoteRight,FaUserPlus,FaMedkit } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock,FaUserPlus,FaMedkit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Register = () => {

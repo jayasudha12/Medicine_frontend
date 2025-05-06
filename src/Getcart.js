@@ -9,8 +9,6 @@ import { FaMedkit } from 'react-icons/fa';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 
-const fallbackImage = "https://via.placeholder.com/300x200?text=No+Image";
-
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,7 +45,9 @@ const CartPage = () => {
   const handleIncreaseQuantity = (medicineId) => {
     setCartItems(prev =>
       prev.map(item =>
-        item.medicineId._id === medicineId ? { ...item, quantity: item.quantity + 1 } : item
+        item.medicineId && item.medicineId._id === medicineId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       )
     );
   };
@@ -55,7 +55,7 @@ const CartPage = () => {
   const handleDecreaseQuantity = (medicineId) => {
     setCartItems(prev =>
       prev.map(item =>
-        item.medicineId._id === medicineId && item.quantity > 1
+        item.medicineId && item.medicineId._id === medicineId && item.quantity > 1
           ? { ...item, quantity: item.quantity - 1 }
           : item
       )
@@ -63,7 +63,7 @@ const CartPage = () => {
   };
 
   const handleRemoveFromCart = async (medicineId) => {
-    setCartItems(prev => prev.filter(item => item.medicineId._id !== medicineId));
+    setCartItems(prev => prev.filter(item => item.medicineId && item.medicineId._id !== medicineId));
     try {
       await axios.delete(`https://medicine-expiry-8lj5.onrender.com/api/medicine/removeFromCart/${userId}/${medicineId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -85,27 +85,43 @@ const CartPage = () => {
   const handlePlaceOrder = async () => {
     setIsSubmitting(true);
     try {
-      const selectedCartItemIds = cartItems.map(item => ({
-        _id: item._id,
-        quantity: item.quantity,
-      }));
-      await axios.post('https://medicine-expiry-8lj5.onrender.com/api/order/placeOrder', {
-        userId, selectedCartItemIds, ...orderDetails
+      // Ensure the cart items are properly structured
+      const selectedCartItemIds = cartItems
+        .filter(item => item.medicineId) // Filter only valid cart items
+        .map(item => ({
+          _id: item._id, // Use the _id from the cart item
+          medicineId: item.medicineId._id, // This is necessary to match the backend
+          quantity: item.quantity
+        }));
+  
+      // Log the selectedCartItemIds and order details for debugging
+      console.log('Selected Cart Items:', selectedCartItemIds);
+      console.log('Order Details:', orderDetails);
+  
+      // Send the request to place the order
+      const response = await axios.post('https://medicine-expiry-8lj5.onrender.com/api/order/placeOrder', {
+        userId,
+        selectedCartItemIds, // Send the properly structured cart item data
+        ...orderDetails, // Include the order details (name, phoneNo, etc.)
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
+  
+      // Clear the cart and reset order details on success
       setCartItems([]);
       setOrderDetails({ name: '', phoneNo: '', email: '', address: '' });
       setOrderDialogOpen(false);
       setSuccessDialogOpen(true);
     } catch (error) {
-      console.error("Order error:", error);
+      console.error('Order error:', error);
       setError("Failed to place order.");
     } finally {
       setIsSubmitting(false);
     }
   };
+  
+  
+  
 
   const handleCloseSuccessDialog = () => setSuccessDialogOpen(false);
 
@@ -157,39 +173,41 @@ const CartPage = () => {
         ) : (
           <>
             <Grid container spacing={4}>
-              {cartItems.map((item) => (
-                <Grid item xs={12} sm={6} md={4} key={item._id}>
-                  <Card sx={{ p: 2, borderRadius: 2, boxShadow: 3 }}>
-                    <img
-                      src={item.medicineId.imageUrl || fallbackImage}
-                      alt={item.medicineId.name}
-                      style={{ width: "100%", height: 180, objectFit: "cover", borderRadius: 8 }}
-                    />
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        {item.medicineId.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        ₹{item.medicineId.price}
-                      </Typography>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 2 }}>
-                        <IconButton onClick={() => handleDecreaseQuantity(item.medicineId._id)}><Remove /></IconButton>
-                        <Typography>{item.quantity}</Typography>
-                        <IconButton onClick={() => handleIncreaseQuantity(item.medicineId._id)}><Add /></IconButton>
-                      </Box>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        fullWidth
-                        sx={{ mt: 2 }}
-                        onClick={() => handleRemoveFromCart(item.medicineId._id)}
-                      >
-                        Remove
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
+              {cartItems.map((item) =>
+                item.medicineId ? (
+                  <Grid item xs={12} sm={6} md={4} key={item._id}>
+                    <Card sx={{ p: 2, borderRadius: 2, boxShadow: 3 }}>
+                      <img
+                        src={item.medicineId.imageUrl}
+                        alt={item.medicineId.name}
+                        style={{ width: "100%", height: 180, objectFit: "cover", borderRadius: 8 }}
+                      />
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          {item.medicineId.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          ₹{item.medicineId.price}
+                        </Typography>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 2 }}>
+                          <IconButton onClick={() => handleDecreaseQuantity(item.medicineId._id)}><Remove /></IconButton>
+                          <Typography>{item.quantity}</Typography>
+                          <IconButton onClick={() => handleIncreaseQuantity(item.medicineId._id)}><Add /></IconButton>
+                        </Box>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          fullWidth
+                          sx={{ mt: 2 }}
+                          onClick={() => handleRemoveFromCart(item.medicineId._id)}
+                        >
+                          Remove
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ) : null
+              )}
             </Grid>
 
             <Divider sx={{ my: 4 }} />

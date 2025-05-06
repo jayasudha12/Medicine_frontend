@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";  // Import Link for navigation
 import axios from "axios";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp"; // Import the logout icon
 
@@ -130,6 +130,13 @@ const DeliveryDashboard = () => {
             </div>
           ))
         )}
+        
+        {/* Link to Accepted Orders */}
+        <div style={styles.linkContainer}>
+          <Link to="/del-accepted" style={styles.link}>
+            View Accepted Orders
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -211,6 +218,19 @@ const styles = {
     cursor: "pointer",
     fontSize: "36px",
     color: "#f44336", // You can adjust the color as needed
+  },
+  linkContainer: {
+    marginTop: "20px",
+  },
+  link: {
+    color: "#2196F3",
+    fontSize: "18px",
+    textDecoration: "none",
+    fontWeight: "500",
+    border: "1px solid #2196F3",
+    padding: "8px 16px",
+    borderRadius: "4px",
+    transition: "background-color 0.3s ease",
   },
 };
 
