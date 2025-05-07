@@ -6,6 +6,8 @@ import {
   Card,
   CardMedia,
   CardContent,
+  AppBar,
+  Toolbar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { FaHeartbeat } from "react-icons/fa";
@@ -53,6 +55,17 @@ const CategoryPage = () => {
 
   return (
     <Box sx={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
+      <AppBar position="sticky" sx={{ backgroundColor: "#388e3c", paddingX: 2 }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <FaHeartbeat color="white" size={24} />
+            <Typography variant="h6" sx={{ fontWeight: "bold", color: "#fff" }}>
+              MediConnect
+            </Typography>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
       <Container maxWidth="1200" sx={{ py: 5 }}>
         <Typography
           variant="h5"

@@ -35,8 +35,12 @@ const DeliveryDashboard = () => {
         );
 
         if (response.data && response.data.assignedOrders) {
-          if (response.data.assignedOrders.length > 0) {
-            setOrders(response.data.assignedOrders);
+          const filteredOrders = response.data.assignedOrders.filter(
+            (order) => order.status !== "Approved" && order.status !== "Delivered"
+          );
+
+          if (filteredOrders.length > 0) {
+            setOrders(filteredOrders);
           } else {
             setError("No assigned orders currently.");
           }
@@ -64,8 +68,6 @@ const DeliveryDashboard = () => {
       } else if (action === "reject") {
         endpoint = "https://medicine-expiry-8lj5.onrender.com/api/deliveryAgent/orders/reject";
         payload.reason = reason || "No reason provided";
-      } else if (action === "confirm") {
-        endpoint = "https://medicine-expiry-8lj5.onrender.com/api/deliveryAgent/orders/confirm-delivery";
       }
 
       const response = await axios.post(endpoint, payload, {
@@ -119,12 +121,6 @@ const DeliveryDashboard = () => {
                   style={{ ...styles.button, ...styles.reject }}
                 >
                   Reject
-                </button>
-                <button
-                  onClick={() => handleAction(order._id, "confirm")}
-                  style={{ ...styles.button, ...styles.confirm }}
-                >
-                  Confirm Delivery
                 </button>
               </div>
             </div>
@@ -190,10 +186,6 @@ const styles = {
   },
   reject: {
     backgroundColor: "#f44336",
-    color: "white",
-  },
-  confirm: {
-    backgroundColor: "#2196F3",
     color: "white",
   },
   loading: {

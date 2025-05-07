@@ -115,45 +115,64 @@ const MedApproval = () => {
         <Typography>No pending medicines.</Typography>
       ) : (
         medicines.map((medicine) => (
-          <Paper key={medicine._id} sx={{ padding: 2, marginBottom: 2 }}>
-            <Typography>
-              <strong>Name:</strong> {medicine.name}
-            </Typography>
-            <Typography>
-              <strong>Description:</strong> {medicine.description}
-            </Typography>
-            <Typography>
-              <strong>Expiry Date:</strong> {medicine.expiryDate}
-            </Typography>
+          <Paper
+  key={medicine._id}
+  sx={{
+    display: "flex",
+    alignItems: "flex-start",
+    padding: 2,
+    marginBottom: 2,
+    gap: 3,
+  }}
+>
+  {/* Left: Image */}
+  <Box sx={{ flexShrink: 0 }}>
+    <img
+      src={medicine.imageUrl}
+      alt={medicine.name}
+      style={{ width: 150, height: "auto", borderRadius: 8 }}
+    />
+  </Box>
 
-            <TextField
-              label="Price"
-              type="number"
-              variant="outlined"
-              fullWidth
-              value={prices[medicine._id] || ""}
-              onChange={(e) => handlePriceChange(medicine._id, e.target.value)}
-              sx={{ marginBottom: 2 }}
-            />
+  {/* Right: Details */}
+  <Box sx={{ flexGrow: 1 }}>
+    <Typography variant="h6" gutterBottom>
+      {medicine.name}
+    </Typography>
+    <Typography sx={{ marginBottom: 1 }}>
+      <strong>Expiry Date:</strong> {medicine.expiryDate}
+    </Typography>
 
-            <Box sx={{ marginTop: 1 }}>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => handleApprove(medicine._id, medicine)}
-                sx={{ marginRight: 1 }}
-              >
-                Approve
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => handleReject(medicine._id)}
-              >
-                Reject
-              </Button>
-            </Box>
-          </Paper>
+    <TextField
+      label="Price"
+      type="number"
+      variant="outlined"
+      fullWidth
+      value={prices[medicine._id] || ""}
+      onChange={(e) => handlePriceChange(medicine._id, e.target.value)}
+      sx={{ marginBottom: 2 }}
+    />
+
+    <Box sx={{ marginTop: 1 }}>
+      <Button
+        variant="contained"
+        color="success"
+        onClick={() => handleApprove(medicine._id, medicine)}
+        sx={{ marginRight: 1 }}
+      >
+        Approve
+      </Button>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => handleReject(medicine._id)}
+      >
+        Reject
+      </Button>
+    </Box>
+  </Box>
+</Paper>
+
         ))
       )}
     </Container>

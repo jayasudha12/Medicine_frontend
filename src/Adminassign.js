@@ -74,7 +74,7 @@ const AdminAssignOrder = () => {
       setError("Please select both an order and a delivery agent.");
       return;
     }
-
+  
     try {
       const response = await axios.put(
         `https://medicine-expiry-8lj5.onrender.com/api/admin/orders/assign/${selectedOrder}`,
@@ -85,13 +85,16 @@ const AdminAssignOrder = () => {
       );
       if (response.status === 200) {
         alert("Order assigned successfully!");
-        navigate("/admin-orders");
+        setSelectedOrder("");
+        setSelectedAgent("");
+        setAvailableAgents([]);
       }
     } catch (err) {
       console.error("Error assigning order:", err);
       setError("Failed to assign the order. Please try again.");
     }
   };
+  
 
   return (
     <>

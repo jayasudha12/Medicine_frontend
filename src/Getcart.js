@@ -15,7 +15,7 @@ const CartPage = () => {
   const [error, setError] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
-  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [orderDetails, setOrderDetails] = useState({ name: '', phoneNo: '', email: '', address: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -94,10 +94,6 @@ const CartPage = () => {
           quantity: item.quantity
         }));
   
-      // Log the selectedCartItemIds and order details for debugging
-      console.log('Selected Cart Items:', selectedCartItemIds);
-      console.log('Order Details:', orderDetails);
-  
       // Send the request to place the order
       const response = await axios.post('https://medicine-expiry-8lj5.onrender.com/api/order/placeOrder', {
         userId,
@@ -111,7 +107,10 @@ const CartPage = () => {
       setCartItems([]);
       setOrderDetails({ name: '', phoneNo: '', email: '', address: '' });
       setOrderDialogOpen(false);
-      setSuccessDialogOpen(true);
+      setSuccessMessage('Order placed successfully!');
+      
+      // Remove success message after 3 seconds
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
       console.error('Order error:', error);
       setError("Failed to place order.");
@@ -119,11 +118,6 @@ const CartPage = () => {
       setIsSubmitting(false);
     }
   };
-  
-  
-  
-
-  const handleCloseSuccessDialog = () => setSuccessDialogOpen(false);
 
   return (
     <Box sx={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
@@ -270,15 +264,10 @@ const CartPage = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Success Dialog */}
-      <Dialog open={successDialogOpen} onClose={handleCloseSuccessDialog}>
-        <DialogTitle>Order Placed Successfully!</DialogTitle>
-        <DialogActions>
-          <Button onClick={handleCloseSuccessDialog} autoFocus>
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Success Alert */}
+      {successMessage && <Alert severity="success" sx={{ position: 'fixed', bottom: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
+        {successMessage}
+      </Alert>}
     </Box>
   );
 };

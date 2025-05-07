@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Admin from "./Admin";
+import Admin from "./Admin";  // Ensure this fits in the layout
 import axios from "axios";
 import {
   Box,
@@ -8,15 +8,18 @@ import {
   Container,
   Paper,
   Typography,
+  Alert,
 } from "@mui/material";
 
 const DeliveryApprove = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); // To track fetch errors
   const token = localStorage.getItem("token");
 
   const fetchApplications = async () => {
     setLoading(true);
+    setError(null); // Reset error state before trying to fetch
     try {
       const res = await axios.get(
         "https://medicine-expiry-8lj5.onrender.com/api/admin/deliveryAgent/applications",
@@ -26,8 +29,13 @@ const DeliveryApprove = () => {
           },
         }
       );
-      setApplications(res.data);
+      // Filter out applications with 'approved' or 'delivery' status
+      const filteredApplications = res.data.filter(
+        (application) => application.status !== "approved" && application.status !== "delivery"
+      );
+      setApplications(filteredApplications);
     } catch (error) {
+      setError("Failed to fetch applications. Please try again later.");
       console.error("Failed to fetch applications:", error);
     } finally {
       setLoading(false);
@@ -76,7 +84,7 @@ const DeliveryApprove = () => {
 
   return (
     <>
-      <Admin /> {/* Make sure this fills width inside the component */}
+      <Admin /> {/* Ensure Admin fits in the layout */}
       <Container sx={{ marginTop: 4 }}>
         <Typography variant="h5" gutterBottom>
           Delivery Agent Applications
@@ -84,6 +92,8 @@ const DeliveryApprove = () => {
 
         {loading ? (
           <CircularProgress />
+        ) : error ? (
+          <Alert severity="error">{error}</Alert>
         ) : applications.length === 0 ? (
           <Typography>No pending delivery agent applications.</Typography>
         ) : (

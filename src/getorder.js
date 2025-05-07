@@ -1,50 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { AppBar, Toolbar, Typography, IconButton, Container, Card, CardContent, Grid, CircularProgress, Alert, Box, Button } from '@mui/material';
+import {
+  AppBar, Toolbar, Typography, IconButton, Grid,
+  CircularProgress, Alert, Box, Button, Card, CardContent, CardMedia
+} from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
 
 const OrderHistoryPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Retrieve token and userId from localStorage
   const token = localStorage.getItem('token');
-  const userId = localStorage.getItem("userId");
-  console.log('User ID:', userId);
-
-  const navigate = useNavigate();  // Initialize navigate
+  const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
-     
       try {
         const res = await axios.get(
           `https://medicine-expiry-8lj5.onrender.com/api/order/orderHistory/${userId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
-
-        setOrders(res.data.pastOrders); // Assuming response has `pastOrders`
+        setOrders(res.data.pastOrders);
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to fetch orders');
       } finally {
         setLoading(false);
       }
     };
-
     fetchOrders();
-  }, [userId, token, navigate]);
+  }, [userId, token]);
 
   return (
-    <Box>
-      {/* Navbar */}
-      <AppBar position="static" sx={{ backgroundColor: '#1565c0' }}>
+    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh' }}>
+      <AppBar position="static" sx={{ backgroundColor: '#2e7d32' }}>
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             MedDelivery
@@ -58,14 +52,9 @@ const OrderHistoryPage = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Main Content */}
-      <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-        <Typography variant="h4" gutterBottom align="center" color="primary">
-          Delivered Orders History
-        </Typography>
-
+      <Box sx={{ px: { xs: 2, md: 6 }, py: 4 }}>
         {loading ? (
-          <Box textAlign="center" mt={4}>
+          <Box textAlign="center" mt={6}>
             <CircularProgress />
           </Box>
         ) : error ? (
@@ -73,38 +62,70 @@ const OrderHistoryPage = () => {
         ) : orders.length === 0 ? (
           <Alert severity="info">No delivered orders found.</Alert>
         ) : (
-          <Grid container spacing={3}>
-            {orders.map((order, idx) => (
-              <Grid item xs={12} sm={6} md={4} key={idx}>
-                <Card sx={{ p: 2, backgroundColor: '#f9f9f9' }}>
-                  <CardContent>
-                    <Typography variant="h6" color="text.primary">
-                      Order Date: {new Date(order.createdAt).toLocaleDateString()}
-                    </Typography>
-                    <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }}>
-                      Status: {order.status}
-                    </Typography>
-                    <Grid container spacing={2}>
-                      {order.items.map((item, i) => (
-                        <Grid item xs={12} sm={6} key={i}>
-                          <Card variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
-                            <Typography><strong>Medicine:</strong> {item.medicineId?.name || 'N/A'}</Typography>
-                            <Typography><strong>Price:</strong> ₹{item.medicineId?.price}</Typography>
-                            <Typography><strong>Quantity:</strong> {item.quantity}</Typography>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
-                    <Button variant="outlined" sx={{ mt: 2 }} onClick={() => alert(`Reorder ${order._id}`)}>
-                      Reorder
-                    </Button>
-                  </CardContent>
-                </Card>
+          orders.map((order, idx) => (
+            <Card
+              key={idx}
+              sx={{ mb: 4, borderRadius: 3, p: 2, backgroundColor: '#fff' }}
+              elevation={2}
+            >
+              <Typography variant="h6" gutterBottom>
+                Order Date: {new Date(order.createdAt).toLocaleDateString()}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                Status: {order.status}
+              </Typography>
+
+              <Grid container spacing={2}>
+                {order.items.map((item, i) => (
+                  <Grid item xs={12} sm={6} md={4} key={i}>
+                    <Box
+                      sx={{
+                        borderRadius: 2,
+                        bgcolor: '#fafafa',
+                        overflow: 'hidden',
+                        transition: '0.3s',
+                        '&:hover': {
+                          boxShadow: 3,
+                        },
+                      }}
+                    >
+                      {item.medicineId?.imageUrl && (
+                        <CardMedia
+                          component="img"
+                          height="140"
+                          image={item.medicineId.imageUrl}
+                          alt={item.medicineId?.name}
+                        />
+                      )}
+                      <Box sx={{ p: 2 }}>
+                        <Typography fontWeight="bold">
+                          {item.medicineId?.name || 'Unknown'}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          ₹{item.medicineId?.price}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Qty: {item.quantity}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
+
+              <Box mt={2} textAlign="right">
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={() => alert(`Reorder ${order._id}`)}
+                >
+                  Reorder
+                </Button>
+              </Box>
+            </Card>
+          ))
         )}
-      </Container>
+      </Box>
     </Box>
   );
 };

@@ -9,7 +9,6 @@ import {
   Grid,
   Card,
   CardContent,
-  CardMedia,
   CircularProgress,
   Alert,
   Container,
@@ -157,20 +156,18 @@ const CategoryMedicines = () => {
           <Grid container spacing={4}>
             {medicines.map((med) => (
               <Grid item xs={12} sm={6} md={4} key={med._id}>
-                <Card sx={{ height: "100%", display: "flex", flexDirection: "column", borderRadius: 2, boxShadow: 3, ":hover": { boxShadow: 6 } }}>
-                <CardMedia
-  component="img"
-  height="180"
-  image={med.imageUrl} // use only the actual image URL
-  alt={med.name}
-  sx={{ objectFit: "cover", borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-/>
-
-                  <CardContent>
+                <Card sx={{ height: 350, display: "flex", flexDirection: "column", borderRadius: 2, boxShadow: 3, ":hover": { boxShadow: 6 } }}>
+                  <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                    {/* Fixed size for the image */}
+                    <img 
+                      src={med.imageUrl || fallbackImage} 
+                      alt={med.name} 
+                      style={{ width: "100%", height: 150, objectFit: "cover", borderRadius: 8, marginBottom: 16 }}
+                    />
                     <Typography variant="h6" fontWeight="bold" gutterBottom>
                       {med.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1 }}>
                       {med.description || "Effective and safe medicine for your needs."}
                     </Typography>
                     <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
@@ -203,29 +200,27 @@ const CategoryMedicines = () => {
             {selectedMedicine.name}
           </DialogTitle>
           <DialogContent sx={{ paddingTop: 2 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <img
-                    src={selectedMedicine.image || fallbackImage}
-                    alt={selectedMedicine.name}
-                    style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px' }}
-                  />
-                </Box>
-              </Grid>
-              <Grid item xs={12} md={8}>
-                <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
-                  {selectedMedicine.name}
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                <Typography variant="body2" sx={{ mb: 2 }}>
-                  <strong>Description:</strong> {selectedMedicine.description || 'No description available.'}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Price:</strong> ${selectedMedicine.price || 'N/A'}
-                </Typography>
-              </Grid>
-            </Grid>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <strong>Expiry Date:</strong> {new Date(selectedMedicine.expiryDate).toLocaleDateString()}
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <strong>Manufacture Date:</strong> {new Date(selectedMedicine.manufactureDate).toLocaleDateString()}
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <strong>Chemical Content:</strong> {selectedMedicine.chemicalContent}
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <strong>Quantity:</strong> {selectedMedicine.quantity}
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <strong>Drug License:</strong> {selectedMedicine.drugLicense}
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <strong>Price:</strong> ₹{selectedMedicine.price || 'N/A'}
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <strong>Status:</strong> {selectedMedicine.status}
+            </Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog} color="secondary">

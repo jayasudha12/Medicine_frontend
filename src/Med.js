@@ -34,7 +34,7 @@ const MediConnectPage = () => {
       position: "relative",
     }}>
       {/* AppBar */}
-      <AppBar position="static" sx={{ backgroundColor: "rgba(46, 125, 50, 0.8)" }}>
+      <AppBar position="static" sx={{ backgroundColor: "#388e3c" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between", padding: "0 16px" }}>
           <IconButton edge="start" color="inherit" aria-label="logo">
             <FaMedkit size={30} />
