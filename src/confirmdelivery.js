@@ -45,10 +45,10 @@ const ConfirmDelivery = () => {
   }, [orderId, navigate]);
 
   return (
-    <div style={{ padding: "50px", textAlign: "center" }}>
+    <div style={{ padding: "55px", textAlign: "center" }}>
       <h2>{message}</h2>
     </div>
   );
 };
 
-export default ConfirmDelivery;
+export default ConfirmDelivery;   
